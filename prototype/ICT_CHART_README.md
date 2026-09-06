@@ -52,8 +52,23 @@ The candidate FVG is a mechanical three-complete-candle gap illustration,
 not a validated first-presented FVG or trade signal. Its selection rule and
 source details are available under Data & sources.
 
-Opening the HTML directly or using a generic static server shows the saved
-2026-09-04 NY AM example only, with date navigation explicitly unavailable.
+Opening the HTML directly or through GitHub Pages first looks for the local API.
+When the API is unavailable, the page loads the published static catalog. That
+catalog currently covers 15 trading days from 2026-08-17 through 2026-09-04,
+all six sessions, and both 1-minute and 5-minute candles. Calendar selection,
+Previous, Next, Latest and Compare day work inside that bounded window. If both
+sources are unavailable, the saved 2026-09-04 NY AM example remains as the
+last-resort chart and navigation is disabled.
+
+The static files are derived educational snapshots. The full canonical history
+and mutable continuation source remain local. Rebuild the published window from
+the `ICTLEARN` repository without writing to the market database:
+
+```sh
+python3 tools/export_static_sessions.py \
+  --start-date 2026-08-17 \
+  --end-date 2026-09-04
+```
 
 The server and its Python tests belong to the parent Journal workspace; they are
 not duplicated in this public static repository. From the Journal root, run:

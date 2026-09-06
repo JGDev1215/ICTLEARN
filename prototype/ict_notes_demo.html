@@ -251,6 +251,7 @@ dialog{border:1px solid #3a4b64;background:var(--panel);color:var(--text);border
 <script src="vendor/lightweight-charts.standalone.production.js"></script>
 <script src="chart_scene_adapter.js"></script>
 <script src="lightweight_renderer.js"></script>
+<script src="static_session_store.js"></script>
 <script>
 'use strict';
 const priceRows=[["2026-09-04T11:00:00Z",29681.5,29686,29664,29664],["2026-09-04T11:01:00Z",29666,29666.25,29660.75,29660.75],["2026-09-04T11:02:00Z",29662.25,29665.5,29661.25,29663.25],["2026-09-04T11:03:00Z",29662.5,29664.5,29655,29655],["2026-09-04T11:04:00Z",29654.5,29660.75,29650.75,29656.75],["2026-09-04T11:05:00Z",29655.5,29663.25,29654,29659.75],["2026-09-04T11:06:00Z",29660.75,29661.75,29654,29657.25],["2026-09-04T11:07:00Z",29658.25,29661.75,29656.5,29659.25],["2026-09-04T11:08:00Z",29659.25,29660,29655,29656.25],["2026-09-04T11:09:00Z",29656.75,29657.25,29651,29653],["2026-09-04T11:10:00Z",29652.25,29655,29651.25,29653.5],["2026-09-04T11:11:00Z",29655,29658.5,29651.5,29653],["2026-09-04T11:12:00Z",29654,29659.5,29654,29658.25],["2026-09-04T11:13:00Z",29659.25,29662.5,29658.25,29660],["2026-09-04T11:14:00Z",29660,29663.25,29659.5,29660],["2026-09-04T11:15:00Z",29660.5,29662.75,29658.75,29662.25],["2026-09-04T11:16:00Z",29662.5,29664,29661,29663],["2026-09-04T11:17:00Z",29663,29663.25,29658,29661.5],["2026-09-04T11:18:00Z",29661.5,29666,29660.25,29663.25],["2026-09-04T11:19:00Z",29663.25,29663.25,29657,29657.75],["2026-09-04T11:20:00Z",29658.25,29662.25,29658.25,29659.25],["2026-09-04T11:21:00Z",29658.75,29660.5,29655.5,29658],["2026-09-04T11:22:00Z",29657.75,29667.5,29657.75,29666.5],["2026-09-04T11:23:00Z",29666.75,29666.75,29661,29661.25],["2026-09-04T11:24:00Z",29661.25,29664.25,29659.25,29663],["2026-09-04T11:25:00Z",29662.25,29669.5,29662,29667.75],["2026-09-04T11:26:00Z",29667.25,29676.75,29667,29675],["2026-09-04T11:27:00Z",29673.75,29675.5,29671,29672.25],["2026-09-04T11:28:00Z",29671,29672,29669.75,29669.75],["2026-09-04T11:29:00Z",29669.25,29671,29661.25,29662.5],["2026-09-04T11:30:00Z",29663.75,29666.75,29661,29662.25],["2026-09-04T11:31:00Z",29663.25,29671.5,29661.75,29669.5],["2026-09-04T11:32:00Z",29668.75,29676,29668.25,29674.75],["2026-09-04T11:33:00Z",29675,29675.25,29668.75,29669.25],["2026-09-04T11:34:00Z",29670,29673,29668.25,29669.25],["2026-09-04T11:35:00Z",29669.25,29672.75,29669,29672.25],["2026-09-04T11:36:00Z",29671.75,29675.5,29671,29672.25],["2026-09-04T11:37:00Z",29672.25,29673,29668.25,29669.5],["2026-09-04T11:38:00Z",29668.25,29676.25,29668.25,29673.5],["2026-09-04T11:39:00Z",29672,29673,29667.75,29670.75],["2026-09-04T11:40:00Z",29669.5,29674,29669.25,29671],["2026-09-04T11:41:00Z",29670.5,29675,29670.5,29671.5],["2026-09-04T11:42:00Z",29672.25,29672.25,29666,29669.75],["2026-09-04T11:43:00Z",29669.75,29670.5,29667.5,29669.5],["2026-09-04T11:44:00Z",29668.5,29672.5,29668.25,29671.25],["2026-09-04T11:45:00Z",29671,29673.5,29666.5,29669],["2026-09-04T11:46:00Z",29669.25,29676,29669.25,29675],["2026-09-04T11:47:00Z",29676,29677.5,29674.5,29677],["2026-09-04T11:48:00Z",29677.5,29678.75,29675,29675.25],["2026-09-04T11:49:00Z",29675.25,29678.5,29675.25,29677.25],["2026-09-04T11:50:00Z",29677.25,29679.25,29676.5,29678.25],["2026-09-04T11:51:00Z",29679.25,29679.75,29676.5,29679.25],["2026-09-04T11:52:00Z",29679.25,29680.25,29676.5,29677],["2026-09-04T11:53:00Z",29676.5,29685.25,29676.25,29683],["2026-09-04T11:54:00Z",29682.75,29683.25,29679,29682],["2026-09-04T11:55:00Z",29681.5,29684,29680.75,29683.25],["2026-09-04T11:56:00Z",29683,29690,29682.75,29685],["2026-09-04T11:57:00Z",29684.75,29685.75,29683.75,29685.5],["2026-09-04T11:58:00Z",29686,29686.25,29682,29683.25],["2026-09-04T11:59:00Z",29682.5,29684.25,29677.25,29683.25],["2026-09-04T12:00:00Z",29682,29686.25,29677,29677],["2026-09-04T12:01:00Z",29676.5,29677.5,29658.5,29659.5],["2026-09-04T12:02:00Z",29660.25,29662.25,29653.75,29662.25],["2026-09-04T12:03:00Z",29662,29666.5,29659.25,29663.5],["2026-09-04T12:04:00Z",29663,29663.5,29654.75,29657],["2026-09-04T12:05:00Z",29655.75,29656.75,29640,29640.5],["2026-09-04T12:06:00Z",29640,29645,29634.75,29635],["2026-09-04T12:07:00Z",29634.75,29645,29627,29643.75],["2026-09-04T12:08:00Z",29644.25,29662.75,29644.25,29660.75],["2026-09-04T12:09:00Z",29660,29665.75,29657.5,29660],["2026-09-04T12:10:00Z",29660.25,29663.25,29643.25,29645],["2026-09-04T12:11:00Z",29644.75,29646,29636.75,29643],["2026-09-04T12:12:00Z",29643.5,29647,29636.25,29640],["2026-09-04T12:13:00Z",29640.75,29644,29639.75,29641.75],["2026-09-04T12:14:00Z",29640.5,29644.5,29637.25,29643.25],["2026-09-04T12:15:00Z",29642.25,29645,29637.75,29639.75],["2026-09-04T12:16:00Z",29640.25,29642.75,29635.75,29637.75],["2026-09-04T12:17:00Z",29637.75,29640,29631.75,29636.5],["2026-09-04T12:18:00Z",29637.5,29643.25,29633.75,29640.5],["2026-09-04T12:19:00Z",29640.5,29657,29638.25,29656.5],["2026-09-04T12:20:00Z",29656.25,29661.5,29655.25,29657.75],["2026-09-04T12:21:00Z",29658,29667,29655.5,29661],["2026-09-04T12:22:00Z",29662.5,29662.5,29654.75,29658.75],["2026-09-04T12:23:00Z",29658.5,29660,29656.5,29658.25],["2026-09-04T12:24:00Z",29657.75,29668,29657.5,29666.5],["2026-09-04T12:25:00Z",29666.75,29674.5,29662.75,29671.5],["2026-09-04T12:26:00Z",29670.75,29675.25,29666.25,29666.25],["2026-09-04T12:27:00Z",29667,29671,29664.75,29671],["2026-09-04T12:28:00Z",29670,29672.75,29665,29672.5],["2026-09-04T12:29:00Z",29672,29694,29662.5,29674.25],["2026-09-04T12:30:00Z",29674.5,29693.75,29550,29564.25],["2026-09-04T12:31:00Z",29563.75,29592,29561.75,29565.75],["2026-09-04T12:32:00Z",29565,29576.75,29538,29547.75],["2026-09-04T12:33:00Z",29547.5,29556,29531.25,29546.25],["2026-09-04T12:34:00Z",29544.75,29562.5,29544.75,29552.5],["2026-09-04T12:35:00Z",29553.75,29573,29552.5,29566.75],["2026-09-04T12:36:00Z",29568.25,29574,29558.25,29560.5],["2026-09-04T12:37:00Z",29560.5,29563.5,29544.75,29555.75],["2026-09-04T12:38:00Z",29554.5,29568,29543.25,29546.75],["2026-09-04T12:39:00Z",29547.25,29563.5,29540,29556.5],["2026-09-04T12:40:00Z",29555.5,29579.25,29555,29576.75],["2026-09-04T12:41:00Z",29577.75,29585,29569.25,29575.25],["2026-09-04T12:42:00Z",29576,29587,29574.25,29578.75],["2026-09-04T12:43:00Z",29578.25,29583,29563.5,29566.25],["2026-09-04T12:44:00Z",29567,29574,29555,29557.75],["2026-09-04T12:45:00Z",29557.25,29557.75,29539,29540.25],["2026-09-04T12:46:00Z",29540,29541.25,29513.25,29515.25],["2026-09-04T12:47:00Z",29516,29517.75,29503.75,29507],["2026-09-04T12:48:00Z",29508.25,29519.5,29502,29515.75],["2026-09-04T12:49:00Z",29515.25,29525,29506.75,29518.25],["2026-09-04T12:50:00Z",29518.5,29538,29515.5,29532.5],["2026-09-04T12:51:00Z",29531.75,29542.5,29524.25,29536.25],["2026-09-04T12:52:00Z",29537.25,29541,29532.25,29533.75],["2026-09-04T12:53:00Z",29534.5,29546.75,29526.25,29546.5],["2026-09-04T12:54:00Z",29545.5,29548.25,29528.25,29530],["2026-09-04T12:55:00Z",29529,29537.25,29527.75,29534.25],["2026-09-04T12:56:00Z",29534.5,29535.25,29518,29532.5],["2026-09-04T12:57:00Z",29531.5,29537.25,29526,29537.25],["2026-09-04T12:58:00Z",29536.5,29550.25,29536.5,29547.25],["2026-09-04T12:59:00Z",29546.25,29547.5,29537.75,29546.5],["2026-09-04T13:00:00Z",29547,29547,29523,29528.75],["2026-09-04T13:01:00Z",29528.25,29536.75,29523.5,29527],["2026-09-04T13:02:00Z",29527.75,29539.5,29523.5,29534.25],["2026-09-04T13:03:00Z",29533.75,29549.25,29531.5,29546.75],["2026-09-04T13:04:00Z",29547.25,29551.75,29536.5,29536.75],["2026-09-04T13:05:00Z",29536.75,29556.75,29536,29553],["2026-09-04T13:06:00Z",29552.25,29555,29532,29542.75],["2026-09-04T13:07:00Z",29544.5,29547,29534,29537.75],["2026-09-04T13:08:00Z",29537,29544.75,29536,29540.75],["2026-09-04T13:09:00Z",29540.75,29545.75,29532.75,29534.5],["2026-09-04T13:10:00Z",29533.75,29538.5,29527.75,29528.75],["2026-09-04T13:11:00Z",29529.75,29535,29528.5,29534],["2026-09-04T13:12:00Z",29532.75,29542.5,29532,29541.5],["2026-09-04T13:13:00Z",29541,29550.5,29541,29544],["2026-09-04T13:14:00Z",29543,29548.25,29538.5,29548.25],["2026-09-04T13:15:00Z",29548.25,29555,29546.75,29550.75],["2026-09-04T13:16:00Z",29551,29564.25,29550,29560.5],["2026-09-04T13:17:00Z",29560.5,29561,29554.5,29555.75],["2026-09-04T13:18:00Z",29555.75,29562,29553,29559],["2026-09-04T13:19:00Z",29560.5,29564.5,29557,29564],["2026-09-04T13:20:00Z",29563.5,29571.75,29561.25,29571.25],["2026-09-04T13:21:00Z",29571.25,29577.25,29569.25,29577],["2026-09-04T13:22:00Z",29577.25,29579.5,29569.75,29571.5],["2026-09-04T13:23:00Z",29571.75,29579.75,29569,29578.5],["2026-09-04T13:24:00Z",29578.75,29587.5,29576,29583.75],["2026-09-04T13:25:00Z",29582.75,29588,29578,29583.25],["2026-09-04T13:26:00Z",29583.75,29584.5,29577.25,29579.25],["2026-09-04T13:27:00Z",29579.25,29590.25,29576.5,29580.25],["2026-09-04T13:28:00Z",29580.5,29585.75,29572.5,29575.25],["2026-09-04T13:29:00Z",29575,29591,29574,29588],["2026-09-04T13:30:00Z",29588.75,29596.25,29557,29566],["2026-09-04T13:31:00Z",29565.75,29611.25,29554.5,29607.25],["2026-09-04T13:32:00Z",29607.25,29625.5,29590,29622.5],["2026-09-04T13:33:00Z",29623,29625,29599,29614.75],["2026-09-04T13:34:00Z",29614.25,29635,29612.5,29634],["2026-09-04T13:35:00Z",29634,29637,29617.75,29633.75],["2026-09-04T13:36:00Z",29633.25,29644.5,29611.25,29616.5],["2026-09-04T13:37:00Z",29616.75,29642.25,29615.5,29637.25],["2026-09-04T13:38:00Z",29638.25,29640.25,29622.75,29634.5],["2026-09-04T13:39:00Z",29634.75,29634.75,29612.75,29628.75],["2026-09-04T13:40:00Z",29628.5,29641,29613.25,29620],["2026-09-04T13:41:00Z",29619.5,29629.25,29602,29614.25],["2026-09-04T13:42:00Z",29614.25,29629.75,29607.25,29613.25],["2026-09-04T13:43:00Z",29614.25,29643,29612.25,29642.75],["2026-09-04T13:44:00Z",29643,29647,29597.75,29616.5],["2026-09-04T13:45:00Z",29616.25,29619.25,29577.5,29593.5],["2026-09-04T13:46:00Z",29592.75,29623,29589.25,29622],["2026-09-04T13:47:00Z",29621.75,29633,29616.25,29628.25],["2026-09-04T13:48:00Z",29627.5,29649,29626.75,29634.5],["2026-09-04T13:49:00Z",29633.5,29638.75,29624.25,29634],["2026-09-04T13:50:00Z",29634.5,29643.25,29623,29642.5],["2026-09-04T13:51:00Z",29642.5,29642.5,29617.25,29625.25],["2026-09-04T13:52:00Z",29625.5,29634.5,29609.75,29634.25],["2026-09-04T13:53:00Z",29634,29654.25,29627.75,29649.5],["2026-09-04T13:54:00Z",29650.5,29664.75,29649.5,29660],["2026-09-04T13:55:00Z",29660.25,29676,29652.25,29675.75],["2026-09-04T13:56:00Z",29675.75,29686,29673,29678.75],["2026-09-04T13:57:00Z",29678.5,29687.25,29678,29685.5],["2026-09-04T13:58:00Z",29685.5,29691.75,29682,29688.75],["2026-09-04T13:59:00Z",29688,29691.25,29675.5,29691]];
@@ -271,7 +272,7 @@ let dataset=fallback,bars=dataset.bars,london=null,fvg=null,refs=[],comparison=n
 const requestedRenderer=new URLSearchParams(location.search).get('renderer');
 let state={cursor:35,selected:null,hover:null,focus:'lh',london:true,rth:false,fvg:true,wick:false,timing:false,wickSide:'lower',manualLine:null,manualZone:null,manualLabel:'Reviewed PD array',renderer:requestedRenderer==='svg'?'svg':'lightweight'};
 const drawingsBySession=new Map();
-let historyMeta=null,requestNumber=0,requestController=null,loading=false,jumpIndices=[];
+let historyMeta=null,requestNumber=0,requestController=null,loading=false,jumpIndices=[],dataMode='embedded',staticStore=null;
 let comparisonRequestNumber=0,comparisonRequestController=null;
 let playTimer=null,geometry=null,rendererFallbackMessage='';
 const tick=n=>Math.round((n+Number.EPSILON)*4)/4;
@@ -506,14 +507,12 @@ function clearComparison(closeDialog=false){
  if(closeDialog&&$('compare-dialog').open)$('compare-dialog').close();
 }
 async function loadComparison(day,session){
- if(!historyMeta)throw Error('The local history service is unavailable.');
+ if(!historyMeta)throw Error('Historical study days are unavailable.');
  if(!/^\d{4}-\d{2}-\d{2}$/.test(day)||!historyMeta.sessions.some(item=>item.id===session))throw Error('Choose a valid comparison date and session.');
  comparisonRequestController?.abort();comparisonRequestController=new AbortController();const controller=comparisonRequestController,id=++comparisonRequestNumber;
  $('compare-error').textContent='';$('compare-detail').textContent='Loading comparison…';
  try{
-  const query=new URLSearchParams({date:day,session,timeframe:String(dataset.timeframe||1)});
-  const response=await fetch('/api/ict/session?'+query,{signal:controller.signal,cache:'no-store'});
-  const data=await response.json();if(!response.ok)throw Error(data.error||'Comparison day could not be loaded.');
+  const data=await fetchSessionData(day,session,dataset.timeframe||1,'',controller.signal);
   if(!data.bars.length)throw Error('No complete candles are available for that comparison session.');
   if(id!==comparisonRequestNumber)return false;
   comparison=data;
@@ -528,10 +527,7 @@ async function loadComparison(day,session){
 async function primeComparisonForm(){
  if(comparison)return;
  try{
-  const query=new URLSearchParams({date:dataset.date,session:dataset.session,timeframe:String(dataset.timeframe||1),direction:'prev'});
-  const response=await fetch('/api/ict/session?'+query,{cache:'no-store'});
-  if(!response.ok)return;
-  const data=await response.json();
+  const data=await fetchSessionData(dataset.date,dataset.session,dataset.timeframe||1,'prev');
   if($('compare-dialog').open&&data.date){$('compare-date').value=data.date;}
  }catch{}
 }
@@ -616,17 +612,26 @@ function updateDateButtons(){
 }
 function updateDataDetails(){
  const d=dataset,last=bars.at(-1),coverage=d.sourceMinutes+'/'+d.expectedMinutes+' 1m source rows';
- $('data-footer').textContent='NQ · '+d.date+' · '+d.timeframeLabel+' · '+coverage+(last?' · close '+closeTime(bars.length-1)+' ET':' · no complete bars')+(isPartial(d)?' · gaps':'')+(comparison?' · cmp '+comparison.date:'');
- $('data-footer').title='Read-only NQ SQLite · '+d.startUTC+' to '+d.endUTC+' · '+bars.length+' '+d.timeframeLabel+' candles · '+sourceSummary(d);
+ const modeLabel=dataMode==='static'?'Published snapshot':dataMode==='api'?'Local read-only API':'Embedded example';
+ $('data-footer').textContent=modeLabel+' · NQ · '+d.date+' · '+d.timeframeLabel+' · '+coverage+(last?' · close '+closeTime(bars.length-1)+' ET':' · no complete bars')+(isPartial(d)?' · gaps':'')+(comparison?' · cmp '+comparison.date:'');
+ $('data-footer').title=modeLabel+' · '+d.startUTC+' to '+d.endUTC+' · '+bars.length+' '+d.timeframeLabel+' candles · '+sourceSummary(d);
  $('active-session-title').textContent=d.label+' · '+d.date+' · '+d.window+' ET';
  $('active-data-detail').textContent=d.timeframeLabel+' chart from '+coverage+' observed; '+bars.length+'/'+d.expectedBars+' complete '+d.timeframeLabel+' candles. Source window '+d.startUTC+' to '+d.endUTC+'. Latest observed one-minute bar timestamp: '+(d.lastUTC||'none')+'. Sources: '+sourceSummary(d)+'. '+(d.session==='asia'?'Asia begins on the prior calendar evening.':'')+(comparison?' Comparison overlay: '+comparisonSummary(comparison)+'.':'');
  $('active-prior-detail').textContent=d.previous?'Prior comparator: '+d.previous.label+' · trade date '+d.previous.date+' · '+d.previous.window+' ET'+(d.previous.id==='asia'?' (starts the prior evening)':'')+'. '+d.previous.sourceMinutes+'/'+d.previous.expectedMinutes+' minutes; H '+fmt(d.previous.high)+', L '+fmt(d.previous.low)+', EQ '+fmt(d.previous.eq)+'. '+(isPartial(d.previous)?'Incomplete observed range, marked * on chart.':''):'No prior comparator with observations was found in the preceding 14 days.';
  if(d.priorRTH)$('active-prior-detail').textContent+=' Prior RTH: '+d.priorRTH.date+', '+d.priorRTH.sourceMinutes+'/'+d.priorRTH.expectedMinutes+' minutes.';
  updateFvgDisclosure();
- if(historyMeta)$('history-range').textContent='Available source history: '+historyMeta.firstUTC+' to '+historyMeta.lastUTC+'. Date/session availability can vary within that range.';
+ if(historyMeta)$('history-range').textContent=historyMeta.static?'Published study-day window: '+historyMeta.minDate+' to '+historyMeta.maxDate+'. The full canonical source history remains available only through the local read-only API.':'Available source history: '+historyMeta.firstUTC+' to '+historyMeta.lastUTC+'. Date/session availability can vary within that range.';
 }
 function navigationMessage(message){
  $('navigation-status').textContent=message;$('navigation-status').hidden=!message;
+}
+async function fetchSessionData(day,session,timeframe,direction='',signal){
+ if(dataMode==='static')return staticStore.getSession({day,session,timeframe,direction});
+ if(dataMode!=='api')throw Error('Historical study days are unavailable.');
+ const query=new URLSearchParams({date:day,session,timeframe:String(timeframe)});if(direction)query.set('direction',direction);
+ const response=await fetch('/api/ict/session?'+query,{signal,cache:'no-store'});
+ const data=await response.json();if(!response.ok)throw Error(data.error||'Session could not be loaded.');
+ return data;
 }
 async function loadSession(day,session,direction='',timeframe=Number($('chart-timeframe').value||1)){
  if(!historyMeta)return;
@@ -636,15 +641,14 @@ async function loadSession(day,session,direction='',timeframe=Number($('chart-ti
  updateDateButtons();updatePlayback();
  const timeout=setTimeout(()=>controller.abort(),12000);
  try{
-  const query=new URLSearchParams({date:day,session,timeframe:String(timeframe)});if(direction)query.set('direction',direction);
-  const response=await fetch('/api/ict/session?'+query,{signal:controller.signal,cache:'no-store'});
-  const data=await response.json();if(!response.ok)throw Error(data.error||'Session could not be loaded.');
+  const data=await fetchSessionData(day,session,timeframe,direction,controller.signal);
   if(id!==requestNumber)return;
   loading=false;configureDataset(data);
   if(comparison&&comparison.timeframe!==data.timeframe){
    try{await loadComparison(comparison.date,comparison.session);}catch{clearComparison();}
   }
   const url=new URL(location.href);url.searchParams.set('date',data.date);url.searchParams.set('session',data.session);url.searchParams.set('timeframe',String(data.timeframe));history.replaceState(null,'',url);
+  if(rendererFallbackMessage)navigationMessage(rendererFallbackMessage);
  }catch(error){
   if(id!==requestNumber)return;
   $('trade-date').value=dataset.date;$('trading-session').value=dataset.session;
@@ -658,10 +662,15 @@ async function initializeNavigation(){
  $('previous-date').disabled=true;$('next-date').disabled=true;$('latest-date').disabled=true;
  const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),8000);
  try{
-  const response=await fetch('/api/ict/meta',{signal:controller.signal,cache:'no-store'});
-  if(!response.ok)throw Error('No history service');
-  historyMeta=await response.json();
+  try{
+   const response=await fetch('/api/ict/meta',{signal:controller.signal,cache:'no-store'});
+   if(!response.ok)throw Error('No history service');
+   historyMeta=await response.json();dataMode='api';
+  }catch{
+   staticStore=await ICTStaticSessions.open('static-data/catalog.json');historyMeta=staticStore.meta;dataMode='static';
+  }
   if(!historyMeta.minDate||!historyMeta.maxDate)throw Error('No history bounds');
+  $('trade-date').disabled=false;$('trading-session').disabled=false;$('compare-day').disabled=false;
   $('trade-date').min=historyMeta.minDate;$('trade-date').max=historyMeta.maxDate;
   const query=new URLSearchParams(location.search),requested=query.get('date'),session=query.get('session'),requestedTimeframe=Number(query.get('timeframe')||1);
   const selectedSession=historyMeta.sessions.some(s=>s.id===session)?session:'nyam';
@@ -676,6 +685,7 @@ async function initializeNavigation(){
   }
  }catch{
   historyMeta=null;
+  dataMode='embedded';
   $('trade-date').min=fallback.date;$('trade-date').max=fallback.date;
   $('trade-date').disabled=true;$('trading-session').disabled=true;$('compare-day').disabled=true;
   navigationMessage(rendererFallbackMessage||'Saved demo only · date navigation needs the local history server.');
@@ -758,7 +768,7 @@ notes.addEventListener('input',()=>{clearTimeout(saveTimer);saveTimer=setTimeout
 $('download-notes').addEventListener('click',()=>{const url=URL.createObjectURL(new Blob(['# ICT observation notes\n\n'+notes.value+'\n'],{type:'text/markdown'}));const a=document.createElement('a');a.href=url;a.download='ict-observation-notes.md';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
 document.querySelectorAll('.flashcard button').forEach(button=>button.addEventListener('click',()=>button.closest('.flashcard').classList.toggle('revealed')));
 window.ictChartApp=Object.freeze({
- getAudit:()=>({renderer:state.renderer,date:dataset.date,session:dataset.session,timeframe:dataset.timeframe,cursor:state.cursor,totalBars:bars.length,visibleBars:Math.min(bars.length,state.cursor+1),cutoffISO:bars[state.cursor]?.t||null,scene:ICTChartScene.fromSession({dataset,state,refs,london,fvg,comparison})}),
+ getAudit:()=>({renderer:state.renderer,dataMode,date:dataset.date,session:dataset.session,timeframe:dataset.timeframe,cursor:state.cursor,totalBars:bars.length,visibleBars:Math.min(bars.length,state.cursor+1),cutoffISO:bars[state.cursor]?.t||null,historyBounds:historyMeta?{minDate:historyMeta.minDate,maxDate:historyMeta.maxDate}:null,scene:ICTChartScene.fromSession({dataset,state,refs,london,fvg,comparison})}),
  setRenderer:value=>{state.renderer=value==='lightweight'?'lightweight':'svg';$('chart-renderer').value=state.renderer;drawChart();},
  setCursor:index=>{pause();setCursor(index);}
 });

@@ -8,12 +8,17 @@ price behaviour, timing, and confluence.
 The GitHub Pages entry point is `index.html`, which opens
 `prototype/ict_notes_demo.html`.
 
-The hosted page is a static visual demo using the embedded example snapshot.
-It includes the chart layers, 1-minute/5-minute selector, playback, manual
-drawings, notes, and comparison overlay. GitHub Pages cannot run the project's
-Python chart server or access the local SQLite market database, so full
-date/session navigation remains available through the local server described
-in `prototype/ICT_CHART_README.md`.
+The hosted page includes bounded, precomputed study snapshots for 15 trading
+days from 2026-08-17 through 2026-09-04. The calendar, Previous, Next and Latest
+controls work across those published dates for all six sessions at 1-minute and
+5-minute resolution. Compare day uses the same published window. Playback,
+manual drawings, notes and chart layers continue to work without a server.
+
+GitHub Pages cannot run the project's Python chart server or access the local
+SQLite market database. The published JSON files are educational snapshots,
+not the canonical archive. Full date navigation across the local 2010-2026 NQ
+history remains available through the read-only server described in
+`prototype/ICT_CHART_README.md`.
 
 The page now defaults to the interactive candlestick renderer with crosshair,
 zoom, pan, replay and study overlays. The preserved SVG study chart remains
@@ -35,6 +40,18 @@ Then open:
 
 The local server reads the NQ database in SQLite read-only mode and aggregates
 the optional 5-minute view from the 1-minute rows.
+
+To rebuild the bounded GitHub Pages snapshots from the canonical read-only
+database, run from this repository:
+
+```sh
+python3 tools/export_static_sessions.py \
+  --start-date 2026-08-17 \
+  --end-date 2026-09-04
+```
+
+The exporter writes one checksummed file per trading day plus
+`prototype/static-data/catalog.json`. It does not modify the database.
 
 See [`docs/ADR-001-lightweight-charts-migration.md`](docs/ADR-001-lightweight-charts-migration.md)
 for the migration stages, acceptance gates, and rollback path.

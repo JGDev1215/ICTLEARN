@@ -16,6 +16,12 @@ Adopt TradingView Lightweight Charts 5.2.0 as a pinned, vendored browser depende
 
 All renderers consume the same versioned chart-scene adapter. The adapter owns the boundary between observed market data and visual presentation. It emits only candles available at the replay cursor and carries the display timezone, API window, missing slots, study overlays, and source provenance as explicit fields.
 
+For GitHub Pages, publish a bounded catalog of precomputed session responses.
+The page tries the read-only local API first, then this static catalog, and only
+then the single embedded example. The static catalog enables date, session,
+timeframe and comparison controls without exposing or copying the full local
+database. Every published day has a SHA-256 digest in the catalog.
+
 The local Python service, database path, read-only database access, session definitions, source boundary, and FVG detector remain unchanged in this migration slice.
 
 ## Rollout
@@ -26,11 +32,12 @@ The local Python service, database path, read-only database access, session defi
 4. Compare both renderers against the same scene for OHLC count, first/last timestamp, replay cutoff, and enabled overlay inventory. **Complete for the embedded example.**
 5. Verify representative read-only local API sessions at 1 minute and 5 minutes, then make Lightweight Charts the default. **Complete.**
 6. Keep `?renderer=svg` as a rollback path for at least one published release. Removing it requires a separate decision. **Active.**
+7. Publish bounded per-day static responses so GitHub Pages navigation works without the Python API. **Complete.**
 
 ## Acceptance gates
 
 - GitHub Pages works without a runtime package manager or third-party network request.
-- The embedded example renders in both modes from a static server.
+- Published study dates render in both modes from a static server, with the embedded example retained as a last-resort fallback.
 - The local API path continues to render 1-minute and aggregated 5-minute OHLC without modifying the database.
 - Replay never passes a candle, FVG, comparison point, or annotation dated after the selected cutoff.
 - The visible OHLC readout matches the displayed candle and uses America/New_York for labels.

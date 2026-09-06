@@ -4,7 +4,7 @@
   "private": true,
   "description": "Static ICT chart study guide and renderer migration checks",
   "scripts": {
-    "test": "node --test test/chart_scene_adapter.test.cjs test/browser_smoke.cjs",
+    "test": "node --test test/chart_scene_adapter.test.cjs test/static_session_store.test.cjs test/static_export_integrity.test.cjs test/browser_smoke.cjs",
     "test:unit": "node --test test/chart_scene_adapter.test.cjs",
     "test:browser": "node --test test/browser_smoke.cjs",
     "test:api": "node --test test/api_scene_integration.test.cjs"
