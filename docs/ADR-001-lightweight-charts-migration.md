@@ -43,6 +43,7 @@ The local Python service, database path, read-only database access, session defi
 - The visible OHLC readout matches the displayed candle and uses America/New_York for labels.
 - Missing source slots remain gaps; renderers do not synthesize candles.
 - Source counts and the Databento/Yahoo boundary remain available in the scene and UI.
+- Published day responses are rejected when their byte length or SHA-256 digest differs from the catalog.
 - A renderer failure falls back to SVG with a visible status message.
 - Existing notes, drawing inputs, session controls, and URL state keep working.
 

@@ -55,6 +55,8 @@ The exporter writes one checksummed file per trading day plus
 
 See [`docs/ADR-001-lightweight-charts-migration.md`](docs/ADR-001-lightweight-charts-migration.md)
 for the migration stages, acceptance gates, and rollback path.
+The latest implementation and scope audit is recorded in
+[`docs/AUDIT-002-static-navigation-and-scope.md`](docs/AUDIT-002-static-navigation-and-scope.md).
 
 ## Validation
 

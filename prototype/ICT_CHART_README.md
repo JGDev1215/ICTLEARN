@@ -52,13 +52,15 @@ The candidate FVG is a mechanical three-complete-candle gap illustration,
 not a validated first-presented FVG or trade signal. Its selection rule and
 source details are available under Data & sources.
 
-Opening the HTML directly or through GitHub Pages first looks for the local API.
-When the API is unavailable, the page loads the published static catalog. That
-catalog currently covers 15 trading days from 2026-08-17 through 2026-09-04,
+When served through GitHub Pages or another HTTP server, the page first looks
+for the local API. When the API is unavailable, it loads the published static
+catalog. That catalog currently covers 15 trading days from 2026-08-17 through 2026-09-04,
 all six sessions, and both 1-minute and 5-minute candles. Calendar selection,
 Previous, Next, Latest and Compare day work inside that bounded window. If both
 sources are unavailable, the saved 2026-09-04 NY AM example remains as the
-last-resort chart and navigation is disabled.
+last-resort chart and navigation is disabled. Direct `file://` opening cannot
+fetch the JSON catalog under normal browser security rules, so use the hosted
+page or local server for date navigation.
 
 The static files are derived educational snapshots. The full canonical history
 and mutable continuation source remain local. Rebuild the published window from

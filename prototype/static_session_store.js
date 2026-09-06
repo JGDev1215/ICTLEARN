@@ -8,6 +8,12 @@
   const SCHEMA = 'ictlearn.static-session-catalog';
   const VERSION = 1;
 
+  async function sha256(bytes) {
+    if (!globalThis.crypto?.subtle) throw new Error('This browser cannot verify published study-day data.');
+    const digest = await globalThis.crypto.subtle.digest('SHA-256', bytes);
+    return [...new Uint8Array(digest)].map(value => value.toString(16).padStart(2, '0')).join('');
+  }
+
   class StaticSessionStore {
     constructor(catalog, catalogURL, fetcher) {
       this.catalog = catalog;
@@ -43,10 +49,17 @@
       if (this.dayCache.has(day)) return this.dayCache.get(day);
       const entry = this.catalog.days[day];
       if (!entry) throw new Error('Published data file is unavailable for ' + day + '.');
+      if (!Number.isInteger(entry.bytes) || entry.bytes <= 0 || !/^[a-f0-9]{64}$/.test(entry.sha256 || '')) throw new Error('Published data metadata failed its integrity check.');
       const url = new URL(entry.path, this.catalogURL);
+      if (url.origin !== this.catalogURL.origin) throw new Error('Published data file must use the catalog origin.');
+      url.searchParams.set('v', entry.sha256.slice(0, 16));
       const promise = this.fetcher(url, {cache: 'force-cache'}).then(async response => {
         if (!response.ok) throw new Error('Published data file could not be loaded for ' + day + '.');
-        const payload = await response.json();
+        const bytes = await response.arrayBuffer();
+        if (bytes.byteLength !== entry.bytes || await sha256(bytes) !== entry.sha256) throw new Error('Published data file failed its integrity check.');
+        let payload;
+        try { payload = JSON.parse(new TextDecoder().decode(bytes)); }
+        catch { throw new Error('Published data file is not valid JSON.'); }
         if (payload.schema !== 'ictlearn.static-session-day' || payload.schemaVersion !== VERSION || payload.date !== day) throw new Error('Published data file failed its schema check.');
         return payload;
       }).catch(error => {

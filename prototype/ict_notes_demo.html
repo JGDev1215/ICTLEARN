@@ -634,8 +634,8 @@ async function fetchSessionData(day,session,timeframe,direction='',signal){
  return data;
 }
 async function loadSession(day,session,direction='',timeframe=Number($('chart-timeframe').value||1)){
- if(!historyMeta)return;
- if(!/^\d{4}-\d{2}-\d{2}$/.test(day)){navigationMessage('Choose a valid date.');return;}
+ if(!historyMeta)return false;
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(day)){navigationMessage('Choose a valid date.');return false;}
  pause();requestController?.abort();requestController=new AbortController();const controller=requestController,id=++requestNumber;
  loading=true;navigationMessage('');$('load-state').hidden=false;$('load-state').textContent='Loading '+day+'…';stage.setAttribute('aria-busy','true');
  updateDateButtons();updatePlayback();
@@ -649,10 +649,12 @@ async function loadSession(day,session,direction='',timeframe=Number($('chart-ti
   }
   const url=new URL(location.href);url.searchParams.set('date',data.date);url.searchParams.set('session',data.session);url.searchParams.set('timeframe',String(data.timeframe));history.replaceState(null,'',url);
   if(rendererFallbackMessage)navigationMessage(rendererFallbackMessage);
+  return true;
  }catch(error){
   if(id!==requestNumber)return;
   $('trade-date').value=dataset.date;$('trading-session').value=dataset.session;
   navigationMessage(error.name==='AbortError'?'Loading timed out. Try the date again.':error.message);
+  return false;
  }finally{
   clearTimeout(timeout);
   if(id===requestNumber){loading=false;$('load-state').hidden=true;stage.setAttribute('aria-busy','false');updateDateButtons();updatePlayback();}
@@ -678,7 +680,8 @@ async function initializeNavigation(){
   $('chart-timeframe').value=String(selectedTimeframe);
   $('compare-date').min=historyMeta.minDate;$('compare-date').max=historyMeta.maxDate;
   updateDateButtons();
-  await loadSession(requested||historyMeta.maxDate,selectedSession,requested?'':'latest',selectedTimeframe);
+  const loaded=await loadSession(requested||historyMeta.maxDate,selectedSession,requested?'':'latest',selectedTimeframe);
+  if(!loaded)await loadSession(historyMeta.maxDate,selectedSession,'latest',selectedTimeframe);
   const compareDate=query.get('compareDate'),compareSession=query.get('compareSession');
   if(compareDate&&historyMeta.sessions.some(item=>item.id===compareSession)){
    try{await loadComparison(compareDate,compareSession);}catch{clearComparison();}

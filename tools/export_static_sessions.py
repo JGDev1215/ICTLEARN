@@ -48,6 +48,16 @@ def export(args):
     output = args.output.resolve()
     days_directory = output / "days"
     days_directory.mkdir(parents=True, exist_ok=True)
+    prior_paths = set()
+    catalog_path = output / "catalog.json"
+    if catalog_path.exists():
+        try:
+            prior_catalog = json.loads(catalog_path.read_text())
+            if prior_catalog.get("schema") == "ictlearn.static-session-catalog":
+                prior_paths = {entry["path"] for entry in prior_catalog.get("days", {}).values()
+                               if isinstance(entry, dict) and isinstance(entry.get("path"), str)}
+        except (OSError, json.JSONDecodeError):
+            pass
     available = {f"{session}:{timeframe}": [] for session in SESSIONS for timeframe in TIMEFRAMES}
     day_entries = {}
 
@@ -104,7 +114,12 @@ def export(args):
         "available": available,
         "days": day_entries,
     }
-    (output / "catalog.json").write_bytes(compact_json(catalog))
+    catalog_path.write_bytes(compact_json(catalog))
+    current_paths = {entry["path"] for entry in day_entries.values()}
+    for relative in prior_paths - current_paths:
+        stale = (output / relative).resolve()
+        if stale.parent == days_directory.resolve() and stale.suffix == ".json" and stale.exists():
+            stale.unlink()
     return len(day_entries), sum(entry["bytes"] for entry in day_entries.values())
 
 

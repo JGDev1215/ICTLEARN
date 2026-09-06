@@ -167,6 +167,13 @@ test('static page preserves SVG rollback and renders the default interactive rep
   await page.waitForTimeout(350);
   await page.reload({waitUntil: 'networkidle'});
   assert.equal(await page.locator('#journal-notes').inputValue(), 'Renderer migration note persists');
+
+  await page.goto(`http://127.0.0.1:${port}/prototype/ict_notes_demo.html?date=1900-01-01&session=rth&timeframe=5`, {waitUntil: 'networkidle'});
+  await page.waitForFunction(() => window.ictChartApp?.getAudit().dataMode === 'static' && window.ictChartApp.getAudit().date === '2026-09-04');
+  const repairedURL = new URL(page.url());
+  assert.equal(repairedURL.searchParams.get('date'), '2026-09-04');
+  assert.equal(repairedURL.searchParams.get('session'), 'rth');
+  assert.equal(repairedURL.searchParams.get('timeframe'), '5');
   assert.deepEqual(externalRequests, []);
   assert.deepEqual(errors, []);
 });
