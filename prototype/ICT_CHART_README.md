@@ -1,0 +1,57 @@
+# ICT chart preview
+
+Run from the Journal project root:
+
+```sh
+python3 prototype/ict_chart_server.py --port 8768
+```
+
+Open <http://127.0.0.1:8768/prototype/ict_notes_demo.html>.
+
+The calendar chooses the trading date. Arrows move to the next/previous date
+with complete candles for the selected session; Latest jumps to its latest
+available date. The session selector offers Asia, London, NY AM, NY lunch,
+NY PM and RTH, using the project's New York time windows. Asia starts on the
+calendar evening before its trading date.
+
+Date/session/timeframe choices are included in the URL. The chart defaults to
+one-minute OHLC candles; the optional five-minute view is aggregated from the
+same one-minute rows. Candles, range references, price scale, playback and the
+candidate illustration refresh together.
+Use Compare day to overlay a second date/session as a dashed close path
+normalized to that study day's opening price. This is a visual pattern-review
+aid rather than a price-level signal; the selected comparison is also stored
+in the URL so a study view can be revisited.
+Manual drawings are retained separately by date/session for the current
+page visit. Journal notes use the existing browser storage key; keep the
+same hostname and port to access existing drafts.
+
+The server binds only to 127.0.0.1 and opens the linked NQ database using
+SQLite mode=ro and PRAGMA query_only. It exposes GET-only history endpoints
+and a small allowlist of demo/source files. The market database is never
+copied or modified. Dates outside source coverage return an error; empty
+windows show an empty chart, and incomplete five-minute buckets are omitted
+without compressing the time axis.
+
+The API labels the fixed Databento history and the mutable Yahoo `NQ=F`
+continuation separately. A source-boundary marker is drawn when it falls
+inside the selected session; the footer and Data & sources panel report the
+one-minute source-row counts behind the displayed candles.
+
+The previous-range comparator is the most recent elapsed, non-overlapping
+canonical session with observations within 14 preceding days. Asterisks
+mark partial observed ranges. This UI choice does not change report or
+scheduler policy. RTH is an optional separate comparison.
+
+The candidate FVG is a mechanical three-complete-candle gap illustration,
+not a validated first-presented FVG or trade signal. Its selection rule and
+source details are available under Data & sources.
+
+Opening the HTML directly or using a generic static server shows the saved
+2026-09-04 NY AM example only, with date navigation explicitly unavailable.
+
+Focused checks:
+
+```sh
+python3 -m unittest discover -s prototype -p test_ict_chart_server.py -v
+```

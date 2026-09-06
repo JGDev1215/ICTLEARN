@@ -1,0 +1,718 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Interactive NQ killzone chart with prior-session ranges, candidate FVG and wick measurements.">
+<title>NQ · ICT Chart Study</title>
+<style>
+:root{color-scheme:dark;--bg:#0b111b;--panel:#111b29;--line:#243246;--text:#e1eaf4;--muted:#91a2b8;--gold:#e6b668;--blue:#aa9aff;--green:#62d4b4;--red:#f18491}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:13px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input,select,textarea{font:inherit;color:inherit}button,select{border:1px solid var(--line);background:var(--panel);border-radius:7px;padding:7px 11px;cursor:pointer}button:hover,select:hover{border-color:#60748e}button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,svg:focus-visible{outline:2px solid var(--gold);outline-offset:2px}button:disabled{opacity:.4;cursor:default}button[aria-pressed=true]{background:#243246;border-color:#62738a;color:#fff}a{color:#afcaff}button.primary{background:#e6b668;color:#101821;border-color:#e6b668}svg text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.workspace{height:100dvh;min-height:510px;display:grid;grid-template-rows:55px 44px minmax(280px,1fr) 50px 25px;overflow:hidden}.appbar{display:flex;align-items:center;gap:17px;padding:0 18px;border-bottom:1px solid var(--line)}.identity{display:flex;align-items:center;gap:10px;white-space:nowrap}.identity strong{font-size:20px;letter-spacing:-.6px}.badge{font-size:10px;color:var(--muted);border:1px solid var(--line);padding:4px 6px;border-radius:4px}.timeframe-select{font-size:11px;padding:5px 7px;width:54px}.session-title{display:flex;gap:12px;align-items:center;font-size:12px}.session-title span{color:var(--muted)}.app-actions{margin-left:auto;display:flex;gap:6px}.app-actions button{font-size:12px}.toolbar{display:flex;align-items:center;gap:6px;padding:0 18px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}.toolbar button{font-size:11px;padding:5px 9px;white-space:nowrap;background:transparent}.toolbar button[aria-pressed=true]{background:#1a283a}.swatch{display:inline-block;width:7px;height:7px;border-radius:2px;margin-right:6px;background:var(--gold)}.violet{background:var(--blue)}.mint{background:var(--green)}.gray{background:var(--muted)}.rose{background:var(--red)}.toolbar .draw-button{margin-left:auto}
+.chart-stage{position:relative;min-height:0;overflow:hidden}.readout{position:absolute;top:12px;left:18px;right:12px;display:flex;gap:12px;align-items:center;pointer-events:none;font:11px ui-monospace,SFMono-Regular,Consolas,monospace;z-index:1}.readout span{color:var(--muted)}.readout b{font-weight:500;color:var(--text)}.readout .bar-time{color:var(--text)}#price-chart{display:block;width:100%;height:100%;touch-action:pan-y;outline-offset:-3px}.compare-hint{position:absolute;top:11px;right:18px;max-width:42%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#9eafff;font-size:10px;text-align:right;pointer-events:none}.compare-hint[hidden]{display:none}.chart-hint{position:absolute;left:18px;bottom:43px;color:#8091a8;font-size:10px;pointer-events:none}.playback{display:flex;align-items:center;gap:9px;padding:0 18px;border-top:1px solid var(--line);background:#0f1825}.playback button{font-size:12px;padding:6px 9px;min-width:30px}.playback label{font-size:11px;color:var(--muted)}#replay{flex:1;min-width:40px;accent-color:var(--gold);cursor:pointer}#replay-time{font:11px ui-monospace,SFMono-Regular,monospace;min-width:62px}.playback select{font-size:11px;max-width:144px;padding:6px}.footnote{display:flex;align-items:center;justify-content:space-between;padding:0 18px;color:#8193ab;font-size:10px}.footnote button{border:0;background:none;padding:0;color:#9dabc0;font-size:10px}
+dialog{border:1px solid #3a4b64;background:var(--panel);color:var(--text);border-radius:12px;box-shadow:0 24px 100px #0009;padding:0;width:min(640px,calc(100% - 28px));max-height:85dvh}dialog::backdrop{background:#030811aa;backdrop-filter:blur(3px)}.dialog-head{position:sticky;top:0;display:flex;align-items:center;justify-content:space-between;background:var(--panel);padding:15px 20px;border-bottom:1px solid var(--line);z-index:2}.dialog-head h2{font-size:16px;margin:0}.dialog-content{padding:20px;line-height:1.55}.dialog-content p{color:#adbbcd;font-size:12px}.dialog-content h3{font-size:13px;margin:20px 0 6px}.input-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.input-grid label{display:grid;gap:5px;font-size:11px;color:var(--muted)}.input-grid input,.input-grid select,textarea{width:100%;background:#0a1421;border:1px solid #3b4a60;border-radius:6px;padding:9px}.input-grid .wide{grid-column:1/-1}.dialog-actions{display:flex;gap:8px;margin-top:17px}.error{color:#ffadb4!important;min-height:18px;margin-bottom:0}.library-nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}.library-nav a{font-size:11px}.section{margin:24px 0;scroll-margin-top:75px}.section-head h2{font-size:17px;margin:0}.section-head p{margin:5px 0 16px}.eyebrow,.source,.tag,.field-label{font-size:10px;color:var(--gold)}.panel,.concept-card,.flashcard{border:1px solid var(--line);border-radius:8px;padding:13px;margin:10px 0}.card-header{display:flex;gap:12px;justify-content:space-between;font-size:12px}.quote,.quote-note,.array-card p,.time-card p{font-size:12px;line-height:1.6}.array-card,.time-card,.source-item{margin:15px 0}.array-icon{color:var(--gold);font-size:10px}.array-card strong,.time-card strong,.source-item strong{font-size:12px}.time,.field-value{font-size:12px;color:var(--muted)}.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.field span{display:block}.field-grid+.quote-note{display:none}.field-grid{display:none}.form-actions,.source-item{display:flex;justify-content:space-between;gap:15px}.source-item small{display:block;color:var(--muted);font-size:11px}.source-item a{font-size:11px;white-space:nowrap}textarea{margin:10px 0;min-height:180px;resize:vertical}.save-status{font-size:11px;color:var(--muted)}.gap-list{font-size:12px;color:#adbbcd;padding-left:16px}.gap-list li{margin:8px 0}.flashcard button{width:100%;text-align:left}.flashcard button span{float:right;font-size:9px;color:var(--gold)}.flashcard-answer{display:none;padding-top:14px;font-size:12px}.flashcard.revealed .flashcard-answer{display:block}.context-flow{display:flex;flex-wrap:wrap;gap:8px}.flow-step{flex:1;min-width:130px;font-size:11px}.flow-step span{display:block;color:var(--muted);margin-top:4px}
+@media(max-width:650px){.workspace{grid-template-rows:48px 42px minmax(280px,1fr) 48px 24px}.appbar,.toolbar,.playback{padding-left:10px;padding-right:10px}.appbar{gap:10px}.session-title{font-size:11px;display:block}.session-title span{display:block;font-size:10px;margin-top:2px}.identity{gap:6px}.identity strong{font-size:18px}.app-actions button{padding:6px 8px;font-size:11px}.readout{left:10px;top:10px;gap:7px;font-size:9px}.readout .open-value{display:none}.compare-hint{right:10px;top:30px;max-width:58%;font-size:9px}.chart-hint{left:10px;font-size:9px;max-width:70%}.playback{gap:6px}.playback label{display:none}.playback select{max-width:98px;font-size:10px}.footnote{padding:0 10px;font-size:9px}.footnote .long-footer{display:none}.toolbar .draw-button{margin-left:0}.dialog-content{padding:15px}}
+@media print{.workspace{height:95vh}.app-actions,.toolbar,.playback,.chart-hint,.footnote button{visibility:hidden}dialog{display:none}}
+
+.market-picker{display:flex;align-items:center;gap:8px;min-width:0}.date-nav{display:flex;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:6px}.date-nav button{border:0;background:transparent;padding:6px;width:26px}.date-nav input{border:0;background:transparent;padding:5px 2px;width:124px;font-size:12px;color:var(--text)}.market-picker select{font-size:11px;width:165px;min-width:0}.market-picker>button{font-size:11px;padding:7px 9px}.load-state{position:absolute;inset:0;display:grid;place-content:center;text-align:center;gap:8px;z-index:3;background:var(--bg);font-size:13px;color:var(--muted)}.load-state[hidden],.navigation-status[hidden]{display:none}.navigation-status{position:absolute;top:34px;right:14px;z-index:3;max-width:80%;font-size:11px;padding:7px 10px;background:#352d20;border:1px solid #806742;border-radius:6px;color:#f4d7a6}.appbar{gap:10px}.footnote span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:10px}.footnote button{white-space:nowrap}
+@media(max-width:850px){.workspace{grid-template-rows:96px 42px minmax(280px,1fr) 48px 24px}.appbar{display:grid;grid-template-columns:auto 1fr;grid-template-rows:39px 48px;gap:0 8px;padding-top:3px}.identity{grid-row:1;grid-column:1}.app-actions{grid-row:1;grid-column:2}.market-picker{grid-row:2;grid-column:1/-1;justify-content:space-between}.market-picker select{flex:1;max-width:230px}}
+@media(max-width:440px){.date-nav input{width:111px;font-size:11px}.date-nav button{width:22px}.market-picker{gap:5px}.market-picker select{width:138px;padding:7px 4px}.market-picker>button{padding:7px 6px;font-size:10px}.app-actions button{font-size:10px}}
+</style>
+</head>
+<body>
+<main class="workspace" id="chart-view">
+  <header class="appbar">
+    <div class="identity"><strong>NQ</strong><select id="chart-timeframe" class="timeframe-select" aria-label="Chart timeframe"><option value="1" selected>1m</option><option value="5">5m</option></select></div>
+    <div class="market-picker">
+      <div class="date-nav"><button id="previous-date" aria-label="Previous trading day" title="Previous available trading day">‹</button><input id="trade-date" type="date" value="2026-09-04" aria-label="Trading date"><button id="next-date" aria-label="Next trading day" title="Next available trading day">›</button></div>
+      <select id="trading-session" aria-label="Trading session">
+        <option value="asia">Asia · 20:00–00:00</option>
+        <option value="london">London · 02:00–05:00</option>
+        <option value="nyam" selected>NY AM · 07:00–10:00</option>
+        <option value="lunch">NY lunch · 11:30–13:30</option>
+        <option value="nypm">NY PM · 13:30–16:00</option>
+        <option value="rth">RTH · 09:30–16:00</option>
+      </select>
+      <button id="latest-date" title="Latest available day for this session">Latest</button>
+    </div>
+    <div class="app-actions"><button id="compare-day" title="Overlay another day as a normalized path">Compare day</button><button id="open-notes">Notes</button><button id="reset-view" title="Restore chart layers and full session">Reset view</button></div>
+  </header>
+  <nav class="toolbar" aria-label="Chart layers">
+    <button id="show-london" aria-pressed="true"><i class="swatch"></i><span id="prior-range-label">London range</span></button>
+    <button id="show-rth" aria-pressed="false"><i class="swatch gray"></i>Prior RTH</button>
+    <button id="show-fvg" aria-pressed="true"><i class="swatch violet"></i>FVG candidate</button>
+    <button id="show-wick" aria-pressed="false"><i class="swatch rose"></i>Wick CE</button>
+    <button id="show-timing" aria-pressed="false"><i class="swatch mint"></i>Macros</button>
+    <button id="open-drawings" class="draw-button">＋ Draw levels</button>
+  </nav>
+  <section class="chart-stage" aria-label="Interactive killzone chart">
+    <div class="readout" id="ohlc-readout"></div>
+    <div class="compare-hint" id="compare-hint" hidden></div>
+    <div id="load-state" class="load-state" hidden role="status"></div>
+    <div id="navigation-status" class="navigation-status" hidden role="status"></div>
+    <svg id="price-chart" tabindex="0" role="img" aria-label="NQ NY AM killzone chart. Use the timeline to inspect candles. Select a candle to measure its wick, or a level label to measure distance."></svg>
+    <div class="chart-hint" id="chart-hint">Click a candle: wick CE · Click a level: distance</div>
+  </section>
+  <div class="playback" aria-label="Historical playback">
+    <button id="play" aria-label="Play historical candles" title="Play historical candles">▶</button>
+    <button id="step-back" aria-label="Previous candle">‹</button>
+    <label for="replay">Inspect</label>
+    <input id="replay" type="range" min="0" max="35" value="35" aria-label="Historical candle">
+    <button id="step-forward" aria-label="Next candle">›</button>
+    <output id="replay-time">10:00 ET</output>
+    <select id="jump" aria-label="Jump to time">
+      <option value="" disabled>Jump to…</option>
+      <option value="35">Full session</option>
+      <option value="18">08:30 bar</option>
+      <option value="30">09:30 open</option>
+      <option value="31">FVG formed</option>
+      <option value="32">FVG revisit</option>
+    </select>
+  </div>
+  <footer class="footnote"><span id="data-footer">NQ SQLite · snapshot to 10:00 ET</span><button id="open-data">Data & sources ↗</button></footer>
+</main>
+<dialog id="drawing-dialog" aria-labelledby="drawing-title">
+  <div class="dialog-head"><h2 id="drawing-title">Draw on the chart</h2><button data-close aria-label="Close drawings">✕</button></div>
+  <form class="dialog-content" id="drawing-form">
+    <div class="input-grid">
+      <label class="wide">Label<input id="user-label" maxlength="32" placeholder="Reviewed PD array"></label>
+      <label>PD array level<input id="user-pd-level" inputmode="decimal" placeholder="Price"></label>
+      <label>Selected wick<select id="wick-side"><option value="lower">Lower wick</option><option value="upper">Upper wick</option></select></label>
+      <label>FVG high<input id="user-fvg-high" inputmode="decimal" placeholder="Upper boundary"></label>
+      <label>FVG low<input id="user-fvg-low" inputmode="decimal" placeholder="Lower boundary"></label>
+    </div>
+    <p>Manual drawings span the chart. Select a candle to anchor its wick CE.</p>
+    <div class="dialog-actions"><button class="primary" type="submit">Plot drawings</button><button id="clear-drawings" type="button">Clear drawings</button></div>
+    <p id="drawing-error" class="error" role="alert"></p>
+  </form>
+</dialog>
+<dialog id="notes-dialog" aria-labelledby="notes-title">
+  <div class="dialog-head"><h2 id="notes-title">Study notes</h2><button data-close aria-label="Close notes">✕</button></div>
+  <div class="dialog-content">
+    <nav class="library-nav" aria-label="Study sections"><a href="#data-details">Data</a><a href="#price-references">Concepts</a><a href="#time-map">Timing</a><a href="#journal">Journal</a><a href="#sources">Sources</a></nav>
+    <section id="data-details" class="section">
+      <h3 id="active-session-title">Selected session</h3>
+      <p id="active-data-detail"></p>
+      <p id="active-prior-detail"></p>
+      <p id="active-fvg-detail"></p>
+      <h3>Date and session controls</h3>
+      <p>The arrows skip dates without complete candles for the selected session. The calendar can select any day; weekends, holidays and gaps may have no observations. Asia belongs to the following trading date: Monday's Asia window starts Sunday at 20:00 ET. All windows use America/New_York and adjust for daylight saving time.</p>
+      <p>Gold carries forward the most recent elapsed, non-overlapping canonical session with observations. This is a chart comparator. An asterisk marks an incomplete prior range. Optional prior RTH is the latest elapsed RTH window with observations; its final chart close is not official settlement.</p>
+      <p>Purple marks a mechanically detected, three-candle gap for review. The example selects the earliest detected gap forming after the RTH open when that open is in view, otherwise after the session start. This selection is an illustration rule, not the notes' undefined “first-presented FVG” qualification. Only three consecutive, complete candles qualify, and the box starts after the third candle closes.</p>
+      <p>Rose measures the selected upper or lower wick. Midpoint lines are exact; displayed prices round to 0.25 points, with half ticks rounded up. Drawings are kept separately for each date/session during this visit.</p>
+      <h3>Data boundaries</h3>
+      <p>Source: the project's read-only NQ one-minute SQLite history. The chart defaults to complete 1-minute OHLC candles; 5-minute candles are aggregated from those same one-minute rows. Missing or incomplete source slots stay empty. The database includes a fixed Databento segment and a mutable Yahoo NQ=F continuation; this viewer keeps that source distinction visible and does not verify fixed-contract identity. No live feed, event context or SMT inputs are supplied.</p>
+      <h3>Daily study loop</h3>
+      <p>Jump to another date or session, then use Compare day to overlay a normalized close path from a second study day. Look for repeated timing, range interaction, displacement, FVG response and nearby reference confluence before recording expectation, delivery and invalidation.</p>
+      <p id="history-range"></p>
+    </section>
+    <section class="section" id="price-references">
+      <div class="section-head"><div><div class="eyebrow">01 · Structure</div><h2>Price references</h2></div><p>These cards show what the notes name and how the demo keeps the missing chart-specific details visible.</p></div>
+      <div class="grid-2 searchable-group">
+        <div class="panel searchable" data-search="first presented fair value gap fvg chart layout t 43 37 45 12">
+          <div class="card-header"><span class="card-title">First presented fair value gap</span><span class="source">T 43:37–45:12</span></div>
+          <p class="quote"><em>“A separately maintained FVG reference named in the chart-layout discussion. The saved reference does not establish its qualifying time window or selection rules.”</em></p>
+          <p class="quote-note"><span class="tag gold">Named in notes</span> <span class="tag red">Selection rule TBD</span></p>
+        </div>
+        <div class="panel searchable" data-search="nested references confluence fvg wick midpoint t 79 00 79 21 pd array">
+          <div class="card-header"><span class="card-title">Nested references / confluence</span><span class="source">T 79:00–79:21</span></div>
+          <p class="quote"><em>“Two references overlap or sit close together—for example, an FVG and a wick midpoint. Their interaction provides additional context; the lecture supplies no numerical probability uplift.”</em></p>
+          <p class="quote-note"><span class="tag blue">Context</span> <span class="tag red">No probability claim</span></p>
+        </div>
+      </div>
+      <div class="grid-3 searchable-group" style="margin-top:14px">
+        <div class="concept-card searchable" data-search="fair value gap inversion rejection bearish support bullish t 76 23 77 18 80 58 81 38">
+          <div class="card-header"><span class="card-title">FVG versus inversion</span><span class="source">T 76:23–77:18</span></div>
+          <p class="quote"><em>“In the example, rejection from a bearish gap supports the bearish narrative. Trading above it and then treating it as support on a return would support the alternative bullish interpretation.”</em></p>
+        </div>
+        <div class="concept-card searchable" data-search="daily structures bisi sibi volume imbalance suspension block t 27 43 28 38 t 30 15 31 59">
+          <div class="card-header"><span class="card-title">Daily structures</span><span class="source">T 27:43–34:08</span></div>
+          <p class="quote"><em>“The examples include BISI, SIBI, volume imbalances and a Suspension Block.”</em></p>
+          <p class="quote-note">The saved notes describe the Suspension Block as a SIBI with volume imbalances at both boundaries.</p>
+        </div>
+        <div class="concept-card searchable" data-search="immediate rebalance no fvg volume imbalance t 116 31 117 19">
+          <div class="card-header"><span class="card-title">Immediate rebalance</span><span class="source">T 116:31–117:19</span></div>
+          <p class="quote"><em>“In the later example, ICT checks candle prices, states that no volume imbalance or FVG is present in the specific interaction, and labels it immediate rebalance.”</em></p>
+        </div>
+      </div>
+      <div class="panel searchable" data-search="range equilibrium premium discount monthly weekly daily liquidity draw on liquidity" style="margin-top:14px">
+        <div class="card-header"><span class="card-title">Reference stack to capture</span><span class="source">Source note §§ 3–5</span></div>
+        <div class="array-card"><div class="array-icon">HTF</div><div><strong>Monthly → Weekly → Daily → Lower Timeframes</strong><p>Previous highs/lows/closes, current range location, equilibrium, premium/discount, daily range, liquidity, and relevant PD arrays.</p></div></div>
+        <div class="array-card"><div class="array-icon">DOL</div><div><strong>Draw on liquidity</strong><p>Current price location, nearby liquidity, higher-timeframe levels, inefficiencies / PD arrays, gap levels, and opposing liquidity.</p></div></div>
+        <div class="array-card"><div class="array-icon">CE</div><div><strong>Consequent encroachment</strong><p>Record the midpoint of the identified reference, such as a selected wick or gap; do not automatically use the whole candle.</p></div></div>
+      </div>
+    </section>
+
+    <section class="section" id="time-map">
+      <div class="section-head"><div><div class="eyebrow">02 · Timing</div><h2>Time map</h2></div><p>Market windows use New York time. The <code>T</code> references are elapsed lecture timestamps, not market times.</p></div>
+      <div class="grid-2">
+        <div class="panel">
+          <div class="timeline">
+            <div class="time-card searchable" data-search="07 00 09 00 pre market study range screenshot i2"><div class="time">07:00–09:00 ET</div><strong>Pre-market study range</strong><p>“The supplied screenshot adds a 07:00–09:00 study window, followed by observation after the 09:30 open.”</p><span class="source">I2 · screenshot supplement</span></div>
+            <div class="time-card searchable" data-search="09 30 rth open premium discount gap"><div class="time">09:30 ET</div><strong>RTH open</strong><p>“At the 9:30 A.M. RTH open: Open above previous RTH settlement → Premium RTH gap. Open below previous RTH settlement → Discount RTH gap.”</p><span class="source">Source note § 6</span></div>
+            <div class="time-card searchable" data-search="09 30 10 00 opening range midpoint 70 percent claim"><div class="time">09:30–10:00 ET</div><strong>Opening-range time window</strong><p>“The 09:30–10:00 time interval discussed in the lecture. It is not the same object as the RTH opening-gap price interval.”</p><span class="source">T 93:34–93:38</span></div>
+            <div class="time-card searchable" data-search="08 50 09 10 macro window 09 50 10 10 10 50 11 10"><div class="time">08:50–09:10 ET</div><strong>Macro window example</strong><p>“The macro described here spans the last 10 minutes of an hour and the first 10 minutes of the next hour.”</p><span class="source">T 63:09–63:15</span></div>
+            <div class="time-card searchable" data-search="43 37 45 12 first presented fair value gap lecture timestamp"><div class="time">T 43:37–45:12</div><strong>Lecture timestamp</strong><p>First-presented fair value gaps are named in the chart-layout discussion. This is elapsed lecture time, not 43:37 ET.</p><span class="source">T · elapsed minutes:seconds</span></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="card-header"><span class="card-title">Time and delivery</span><span class="tag gold">Note extract</span></div>
+          <p class="quote"><em>“A macro is not directional bias.”</em></p>
+          <p class="quote-note">“Direction should already come from broader analysis. The macro gives a window to observe whether expected delivery begins.”</p>
+          <div class="legend" style="margin-top:17px"><span class="tag gold">Timing filter</span><span class="tag blue">Observe delivery</span><span class="tag red">Not a direction rule</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="context-chain">
+      <div class="section-head"><div><div class="eyebrow">03 · Framework</div><h2>Context chain</h2></div><p>This sequence is displayed as a saved note extract, not as an automated decision rule.</p></div>
+      <div class="panel">
+        <p class="quote"><em>“Where is price delivering from? → Where is it likely going? → What PD array / time relationship should facilitate it? → What should price do along the way? → What invalidates the expectation?”</em></p>
+        <div class="context-flow" aria-label="Context chain">
+          <div class="flow-step"><strong>Delivering from</strong><span>Current location and supporting references</span></div>
+          <div class="flow-step"><strong>Likely going</strong><span>Most logical draw / competing objectives</span></div>
+          <div class="flow-step"><strong>PD array / time</strong><span>Nearby reference and timing relationship</span></div>
+          <div class="flow-step"><strong>Along the way</strong><span>Expected delivery and interaction</span></div>
+          <div class="flow-step"><strong>Invalidation</strong><span>Behaviour that weakens the narrative</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="journal">
+      <div class="section-head"><div><div class="eyebrow">04 · Study</div><h2>Observation journal</h2></div><p>Demo form only. Entries are saved in this browser and do not modify market data.</p></div>
+      <div class="grid-2">
+        <div class="panel">
+          <div class="field-grid">
+            <div class="field"><span class="field-label">Date / instrument</span><span class="field-value">TBD</span></div>
+            <div class="field"><span class="field-label">Timeframe</span><span class="field-value">TBD</span></div>
+            <div class="field"><span class="field-label">FVG high / low</span><span class="field-value">TBD</span></div>
+            <div class="field"><span class="field-label">FVG CE</span><span class="field-value">TBD</span></div>
+            <div class="field"><span class="field-label">Nearby PD array</span><span class="field-value">TBD</span></div>
+            <div class="field"><span class="field-label">First interaction ET</span><span class="field-value">TBD</span></div>
+            <div class="field"><span class="field-label">Response delay</span><span class="field-value">TBD</span></div>
+            <div class="field"><span class="field-label">Outcome</span><span class="field-value">TBD</span></div>
+          </div>
+          <p class="quote-note" style="margin-top:15px">These are blank observation fields. The notes do not provide chart-specific FVG prices or actual interaction times.</p>
+        </div>
+        <div class="panel">
+          <label class="field-label" for="journal-notes">Expectation / delivery / invalidation</label>
+          <textarea id="journal-notes" placeholder="Record the expectation before the outcome, what price did, and what would weaken or invalidate the narrative."></textarea>
+          <div class="form-actions"><span class="save-status" id="save-status" aria-live="polite"></span><button class="button" id="download-notes">Download notes</button></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="review">
+      <div class="section-head"><div><div class="eyebrow">05 · Review</div><h2>Quick review</h2></div><p>Click a card to reveal the saved note extract.</p></div>
+      <div class="grid-3">
+        <div class="flashcard"><button type="button">What is the first-presented FVG? <span>REVEAL</span></button><div class="flashcard-answer">“A separately maintained FVG reference named in the chart-layout discussion.”</div></div>
+        <div class="flashcard"><button type="button">What can sit near an FVG? <span>REVEAL</span></button><div class="flashcard-answer">“Two references overlap or sit close together—for example, an FVG and a wick midpoint.”</div></div>
+        <div class="flashcard"><button type="button">What is a macro? <span>REVEAL</span></button><div class="flashcard-answer">“The last 10 minutes of an hour and the first 10 minutes of the next hour.”</div></div>
+      </div>
+    </section>
+
+    <section class="section" id="sources">
+      <div class="section-head"><div><div class="eyebrow">06 · Evidence</div><h2>Sources & gaps</h2></div><p>Every teaching card on this demo points back to a saved project note or its source tag.</p></div>
+      <div class="grid-2">
+        <div class="panel"><div class="source-list">
+          <div class="source-item"><div><strong>ICT lecture synthesis</strong><small>Primary saved reference with transcript timestamps and screenshot supplement.</small></div><a href="../sources/ICT_2026_How_New_Students_Should_Start_Part_1_Final.md" target="_blank" rel="noopener">Open ↗</a></div>
+          <div class="source-item"><div><strong>ICT Lecture Glossary</strong><small>Definitions, source tags, formulas and explicit limitations.</small></div><a href="../sources/ICT_Lecture_Glossary_Part_1.md" target="_blank" rel="noopener">Open ↗</a></div>
+          <div class="source-item"><div><strong>Mentorship core concepts</strong><small>Note extract covering the study sequence, timing, DOL and confluence.</small></div><a href="../sources/ICT_2026_Mentorship_Core_Concepts.md" target="_blank" rel="noopener">Open ↗</a></div>
+          <div class="source-item"><div><strong>Project boundaries</strong><small>NQ journal goal, provenance rules and no-invention limits.</small></div><a href="../sources/PROJECT_BASELINE.md" target="_blank" rel="noopener">Open ↗</a></div>
+        </div></div>
+        <div class="panel"><div class="card-header"><span class="card-title">Data gaps shown by design</span><span class="tag red">TBD</span></div><ul class="gap-list"><li>The first-presented FVG qualifying time window is not defined in the saved reference.</li><li>No chart-specific FVG, PD-array or liquidity prices are supplied in the notes.</li><li>Transcript timestamps are elapsed minutes:seconds, not market times.</li><li>Economic-calendar values, contract details and live price delivery are outside this demo.</li><li>This page is a concept and study reference, not a complete executable strategy.</li></ul></div>
+      </div>
+    </section>
+
+
+  </div>
+</dialog>
+<dialog id="compare-dialog" aria-labelledby="compare-title">
+  <div class="dialog-head"><h2 id="compare-title">Compare another study day</h2><button data-close aria-label="Close comparison">✕</button></div>
+  <form class="dialog-content" id="compare-form">
+    <div class="input-grid">
+      <label>Compare date<input id="compare-date" type="date" aria-label="Compare date"></label>
+      <label>Session<select id="compare-session" aria-label="Compare session">
+        <option value="asia">Asia · 20:00–00:00</option>
+        <option value="london">London · 02:00–05:00</option>
+        <option value="nyam">NY AM · 07:00–10:00</option>
+        <option value="lunch">NY lunch · 11:30–13:30</option>
+        <option value="nypm">NY PM · 13:30–16:00</option>
+        <option value="rth">RTH · 09:30–16:00</option>
+      </select></label>
+    </div>
+    <p id="compare-detail">The comparison is drawn as a normalized close path, so its shape can be compared even when price levels differ.</p>
+    <p id="compare-error" class="error" role="alert"></p>
+    <div class="dialog-actions"><button class="primary" type="submit">Overlay study day</button><button id="clear-comparison" type="button">Clear overlay</button></div>
+  </form>
+</dialog>
+<script>
+'use strict';
+const priceRows=[["2026-09-04T11:00:00Z",29681.5,29686,29664,29664],["2026-09-04T11:01:00Z",29666,29666.25,29660.75,29660.75],["2026-09-04T11:02:00Z",29662.25,29665.5,29661.25,29663.25],["2026-09-04T11:03:00Z",29662.5,29664.5,29655,29655],["2026-09-04T11:04:00Z",29654.5,29660.75,29650.75,29656.75],["2026-09-04T11:05:00Z",29655.5,29663.25,29654,29659.75],["2026-09-04T11:06:00Z",29660.75,29661.75,29654,29657.25],["2026-09-04T11:07:00Z",29658.25,29661.75,29656.5,29659.25],["2026-09-04T11:08:00Z",29659.25,29660,29655,29656.25],["2026-09-04T11:09:00Z",29656.75,29657.25,29651,29653],["2026-09-04T11:10:00Z",29652.25,29655,29651.25,29653.5],["2026-09-04T11:11:00Z",29655,29658.5,29651.5,29653],["2026-09-04T11:12:00Z",29654,29659.5,29654,29658.25],["2026-09-04T11:13:00Z",29659.25,29662.5,29658.25,29660],["2026-09-04T11:14:00Z",29660,29663.25,29659.5,29660],["2026-09-04T11:15:00Z",29660.5,29662.75,29658.75,29662.25],["2026-09-04T11:16:00Z",29662.5,29664,29661,29663],["2026-09-04T11:17:00Z",29663,29663.25,29658,29661.5],["2026-09-04T11:18:00Z",29661.5,29666,29660.25,29663.25],["2026-09-04T11:19:00Z",29663.25,29663.25,29657,29657.75],["2026-09-04T11:20:00Z",29658.25,29662.25,29658.25,29659.25],["2026-09-04T11:21:00Z",29658.75,29660.5,29655.5,29658],["2026-09-04T11:22:00Z",29657.75,29667.5,29657.75,29666.5],["2026-09-04T11:23:00Z",29666.75,29666.75,29661,29661.25],["2026-09-04T11:24:00Z",29661.25,29664.25,29659.25,29663],["2026-09-04T11:25:00Z",29662.25,29669.5,29662,29667.75],["2026-09-04T11:26:00Z",29667.25,29676.75,29667,29675],["2026-09-04T11:27:00Z",29673.75,29675.5,29671,29672.25],["2026-09-04T11:28:00Z",29671,29672,29669.75,29669.75],["2026-09-04T11:29:00Z",29669.25,29671,29661.25,29662.5],["2026-09-04T11:30:00Z",29663.75,29666.75,29661,29662.25],["2026-09-04T11:31:00Z",29663.25,29671.5,29661.75,29669.5],["2026-09-04T11:32:00Z",29668.75,29676,29668.25,29674.75],["2026-09-04T11:33:00Z",29675,29675.25,29668.75,29669.25],["2026-09-04T11:34:00Z",29670,29673,29668.25,29669.25],["2026-09-04T11:35:00Z",29669.25,29672.75,29669,29672.25],["2026-09-04T11:36:00Z",29671.75,29675.5,29671,29672.25],["2026-09-04T11:37:00Z",29672.25,29673,29668.25,29669.5],["2026-09-04T11:38:00Z",29668.25,29676.25,29668.25,29673.5],["2026-09-04T11:39:00Z",29672,29673,29667.75,29670.75],["2026-09-04T11:40:00Z",29669.5,29674,29669.25,29671],["2026-09-04T11:41:00Z",29670.5,29675,29670.5,29671.5],["2026-09-04T11:42:00Z",29672.25,29672.25,29666,29669.75],["2026-09-04T11:43:00Z",29669.75,29670.5,29667.5,29669.5],["2026-09-04T11:44:00Z",29668.5,29672.5,29668.25,29671.25],["2026-09-04T11:45:00Z",29671,29673.5,29666.5,29669],["2026-09-04T11:46:00Z",29669.25,29676,29669.25,29675],["2026-09-04T11:47:00Z",29676,29677.5,29674.5,29677],["2026-09-04T11:48:00Z",29677.5,29678.75,29675,29675.25],["2026-09-04T11:49:00Z",29675.25,29678.5,29675.25,29677.25],["2026-09-04T11:50:00Z",29677.25,29679.25,29676.5,29678.25],["2026-09-04T11:51:00Z",29679.25,29679.75,29676.5,29679.25],["2026-09-04T11:52:00Z",29679.25,29680.25,29676.5,29677],["2026-09-04T11:53:00Z",29676.5,29685.25,29676.25,29683],["2026-09-04T11:54:00Z",29682.75,29683.25,29679,29682],["2026-09-04T11:55:00Z",29681.5,29684,29680.75,29683.25],["2026-09-04T11:56:00Z",29683,29690,29682.75,29685],["2026-09-04T11:57:00Z",29684.75,29685.75,29683.75,29685.5],["2026-09-04T11:58:00Z",29686,29686.25,29682,29683.25],["2026-09-04T11:59:00Z",29682.5,29684.25,29677.25,29683.25],["2026-09-04T12:00:00Z",29682,29686.25,29677,29677],["2026-09-04T12:01:00Z",29676.5,29677.5,29658.5,29659.5],["2026-09-04T12:02:00Z",29660.25,29662.25,29653.75,29662.25],["2026-09-04T12:03:00Z",29662,29666.5,29659.25,29663.5],["2026-09-04T12:04:00Z",29663,29663.5,29654.75,29657],["2026-09-04T12:05:00Z",29655.75,29656.75,29640,29640.5],["2026-09-04T12:06:00Z",29640,29645,29634.75,29635],["2026-09-04T12:07:00Z",29634.75,29645,29627,29643.75],["2026-09-04T12:08:00Z",29644.25,29662.75,29644.25,29660.75],["2026-09-04T12:09:00Z",29660,29665.75,29657.5,29660],["2026-09-04T12:10:00Z",29660.25,29663.25,29643.25,29645],["2026-09-04T12:11:00Z",29644.75,29646,29636.75,29643],["2026-09-04T12:12:00Z",29643.5,29647,29636.25,29640],["2026-09-04T12:13:00Z",29640.75,29644,29639.75,29641.75],["2026-09-04T12:14:00Z",29640.5,29644.5,29637.25,29643.25],["2026-09-04T12:15:00Z",29642.25,29645,29637.75,29639.75],["2026-09-04T12:16:00Z",29640.25,29642.75,29635.75,29637.75],["2026-09-04T12:17:00Z",29637.75,29640,29631.75,29636.5],["2026-09-04T12:18:00Z",29637.5,29643.25,29633.75,29640.5],["2026-09-04T12:19:00Z",29640.5,29657,29638.25,29656.5],["2026-09-04T12:20:00Z",29656.25,29661.5,29655.25,29657.75],["2026-09-04T12:21:00Z",29658,29667,29655.5,29661],["2026-09-04T12:22:00Z",29662.5,29662.5,29654.75,29658.75],["2026-09-04T12:23:00Z",29658.5,29660,29656.5,29658.25],["2026-09-04T12:24:00Z",29657.75,29668,29657.5,29666.5],["2026-09-04T12:25:00Z",29666.75,29674.5,29662.75,29671.5],["2026-09-04T12:26:00Z",29670.75,29675.25,29666.25,29666.25],["2026-09-04T12:27:00Z",29667,29671,29664.75,29671],["2026-09-04T12:28:00Z",29670,29672.75,29665,29672.5],["2026-09-04T12:29:00Z",29672,29694,29662.5,29674.25],["2026-09-04T12:30:00Z",29674.5,29693.75,29550,29564.25],["2026-09-04T12:31:00Z",29563.75,29592,29561.75,29565.75],["2026-09-04T12:32:00Z",29565,29576.75,29538,29547.75],["2026-09-04T12:33:00Z",29547.5,29556,29531.25,29546.25],["2026-09-04T12:34:00Z",29544.75,29562.5,29544.75,29552.5],["2026-09-04T12:35:00Z",29553.75,29573,29552.5,29566.75],["2026-09-04T12:36:00Z",29568.25,29574,29558.25,29560.5],["2026-09-04T12:37:00Z",29560.5,29563.5,29544.75,29555.75],["2026-09-04T12:38:00Z",29554.5,29568,29543.25,29546.75],["2026-09-04T12:39:00Z",29547.25,29563.5,29540,29556.5],["2026-09-04T12:40:00Z",29555.5,29579.25,29555,29576.75],["2026-09-04T12:41:00Z",29577.75,29585,29569.25,29575.25],["2026-09-04T12:42:00Z",29576,29587,29574.25,29578.75],["2026-09-04T12:43:00Z",29578.25,29583,29563.5,29566.25],["2026-09-04T12:44:00Z",29567,29574,29555,29557.75],["2026-09-04T12:45:00Z",29557.25,29557.75,29539,29540.25],["2026-09-04T12:46:00Z",29540,29541.25,29513.25,29515.25],["2026-09-04T12:47:00Z",29516,29517.75,29503.75,29507],["2026-09-04T12:48:00Z",29508.25,29519.5,29502,29515.75],["2026-09-04T12:49:00Z",29515.25,29525,29506.75,29518.25],["2026-09-04T12:50:00Z",29518.5,29538,29515.5,29532.5],["2026-09-04T12:51:00Z",29531.75,29542.5,29524.25,29536.25],["2026-09-04T12:52:00Z",29537.25,29541,29532.25,29533.75],["2026-09-04T12:53:00Z",29534.5,29546.75,29526.25,29546.5],["2026-09-04T12:54:00Z",29545.5,29548.25,29528.25,29530],["2026-09-04T12:55:00Z",29529,29537.25,29527.75,29534.25],["2026-09-04T12:56:00Z",29534.5,29535.25,29518,29532.5],["2026-09-04T12:57:00Z",29531.5,29537.25,29526,29537.25],["2026-09-04T12:58:00Z",29536.5,29550.25,29536.5,29547.25],["2026-09-04T12:59:00Z",29546.25,29547.5,29537.75,29546.5],["2026-09-04T13:00:00Z",29547,29547,29523,29528.75],["2026-09-04T13:01:00Z",29528.25,29536.75,29523.5,29527],["2026-09-04T13:02:00Z",29527.75,29539.5,29523.5,29534.25],["2026-09-04T13:03:00Z",29533.75,29549.25,29531.5,29546.75],["2026-09-04T13:04:00Z",29547.25,29551.75,29536.5,29536.75],["2026-09-04T13:05:00Z",29536.75,29556.75,29536,29553],["2026-09-04T13:06:00Z",29552.25,29555,29532,29542.75],["2026-09-04T13:07:00Z",29544.5,29547,29534,29537.75],["2026-09-04T13:08:00Z",29537,29544.75,29536,29540.75],["2026-09-04T13:09:00Z",29540.75,29545.75,29532.75,29534.5],["2026-09-04T13:10:00Z",29533.75,29538.5,29527.75,29528.75],["2026-09-04T13:11:00Z",29529.75,29535,29528.5,29534],["2026-09-04T13:12:00Z",29532.75,29542.5,29532,29541.5],["2026-09-04T13:13:00Z",29541,29550.5,29541,29544],["2026-09-04T13:14:00Z",29543,29548.25,29538.5,29548.25],["2026-09-04T13:15:00Z",29548.25,29555,29546.75,29550.75],["2026-09-04T13:16:00Z",29551,29564.25,29550,29560.5],["2026-09-04T13:17:00Z",29560.5,29561,29554.5,29555.75],["2026-09-04T13:18:00Z",29555.75,29562,29553,29559],["2026-09-04T13:19:00Z",29560.5,29564.5,29557,29564],["2026-09-04T13:20:00Z",29563.5,29571.75,29561.25,29571.25],["2026-09-04T13:21:00Z",29571.25,29577.25,29569.25,29577],["2026-09-04T13:22:00Z",29577.25,29579.5,29569.75,29571.5],["2026-09-04T13:23:00Z",29571.75,29579.75,29569,29578.5],["2026-09-04T13:24:00Z",29578.75,29587.5,29576,29583.75],["2026-09-04T13:25:00Z",29582.75,29588,29578,29583.25],["2026-09-04T13:26:00Z",29583.75,29584.5,29577.25,29579.25],["2026-09-04T13:27:00Z",29579.25,29590.25,29576.5,29580.25],["2026-09-04T13:28:00Z",29580.5,29585.75,29572.5,29575.25],["2026-09-04T13:29:00Z",29575,29591,29574,29588],["2026-09-04T13:30:00Z",29588.75,29596.25,29557,29566],["2026-09-04T13:31:00Z",29565.75,29611.25,29554.5,29607.25],["2026-09-04T13:32:00Z",29607.25,29625.5,29590,29622.5],["2026-09-04T13:33:00Z",29623,29625,29599,29614.75],["2026-09-04T13:34:00Z",29614.25,29635,29612.5,29634],["2026-09-04T13:35:00Z",29634,29637,29617.75,29633.75],["2026-09-04T13:36:00Z",29633.25,29644.5,29611.25,29616.5],["2026-09-04T13:37:00Z",29616.75,29642.25,29615.5,29637.25],["2026-09-04T13:38:00Z",29638.25,29640.25,29622.75,29634.5],["2026-09-04T13:39:00Z",29634.75,29634.75,29612.75,29628.75],["2026-09-04T13:40:00Z",29628.5,29641,29613.25,29620],["2026-09-04T13:41:00Z",29619.5,29629.25,29602,29614.25],["2026-09-04T13:42:00Z",29614.25,29629.75,29607.25,29613.25],["2026-09-04T13:43:00Z",29614.25,29643,29612.25,29642.75],["2026-09-04T13:44:00Z",29643,29647,29597.75,29616.5],["2026-09-04T13:45:00Z",29616.25,29619.25,29577.5,29593.5],["2026-09-04T13:46:00Z",29592.75,29623,29589.25,29622],["2026-09-04T13:47:00Z",29621.75,29633,29616.25,29628.25],["2026-09-04T13:48:00Z",29627.5,29649,29626.75,29634.5],["2026-09-04T13:49:00Z",29633.5,29638.75,29624.25,29634],["2026-09-04T13:50:00Z",29634.5,29643.25,29623,29642.5],["2026-09-04T13:51:00Z",29642.5,29642.5,29617.25,29625.25],["2026-09-04T13:52:00Z",29625.5,29634.5,29609.75,29634.25],["2026-09-04T13:53:00Z",29634,29654.25,29627.75,29649.5],["2026-09-04T13:54:00Z",29650.5,29664.75,29649.5,29660],["2026-09-04T13:55:00Z",29660.25,29676,29652.25,29675.75],["2026-09-04T13:56:00Z",29675.75,29686,29673,29678.75],["2026-09-04T13:57:00Z",29678.5,29687.25,29678,29685.5],["2026-09-04T13:58:00Z",29685.5,29691.75,29682,29688.75],["2026-09-04T13:59:00Z",29688,29691.25,29675.5,29691]];
+const $=id=>document.getElementById(id);
+const svg=$('price-chart'), stage=document.querySelector('.chart-stage');
+const colors={gold:'#e6b668',violet:'#aa9aff',mint:'#62d4b4',rose:'#f18491',compare:'#9eafff',muted:'#91a2b8',white:'#e1eaf4'};
+const fallback={
+ date:'2026-09-04',session:'nyam',label:'NY AM',window:'07:00–10:00',
+ startUTC:'2026-09-04T11:00:00Z',endUTC:'2026-09-04T14:00:00Z',slots:180,timeframe:1,timeframeLabel:'1m',
+ sourceMinutes:180,expectedMinutes:180,lastUTC:'2026-09-04T13:59:00Z',
+ expectedBars:180,sourceCounts:{yahoo:180},sourceBoundaryUTC:'2026-08-11T22:50:00Z',sourceLabels:{databento:'Databento fixed history',yahoo:'Yahoo continuation (NQ=F)'},
+ bars:priceRows.map(([t,o,h,l,c],slot)=>({t,o,h,l,c,slot,source:'yahoo'})),
+ previous:{label:'London',date:'2026-09-04',window:'02:00–05:00',high:29673,low:29574,eq:29623.5,sourceMinutes:180,expectedMinutes:180},
+ priorRTH:{label:'RTH',date:'2026-09-03',window:'09:30–16:00',high:29584.25,low:29199.5,close:29530.75,sourceMinutes:390,expectedMinutes:390},
+ rthSlot:150,macros:[[50,70],[110,130],[170,180]]
+};
+let dataset=fallback,bars=dataset.bars,london=null,fvg=null,refs=[],comparison=null;
+let state={cursor:35,selected:null,hover:null,focus:'lh',london:true,rth:false,fvg:true,wick:false,timing:false,wickSide:'lower',manualLine:null,manualZone:null,manualLabel:'Reviewed PD array'};
+const drawingsBySession=new Map();
+let historyMeta=null,requestNumber=0,requestController=null,loading=false,jumpIndices=[];
+let comparisonRequestNumber=0,comparisonRequestController=null;
+let playTimer=null,geometry=null;
+const tick=n=>Math.round((n+Number.EPSILON)*4)/4;
+const fmt=n=>tick(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const time=t=>new Intl.DateTimeFormat('en-GB',{timeZone:'America/New_York',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(new Date(t));
+const closeTime=i=>time(new Date(new Date(bars[i].t).getTime()+dataset.timeframe*60000));
+const escapeText=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function tag(name,attrs={},text=''){return '<'+name+' '+Object.entries(attrs).map(([k,v])=>k+'="'+escapeText(v)+'"').join(' ')+'>'+escapeText(text)+'</'+name+'>';}
+function wickFor(bar,side){const low=side==='lower'?bar.l:Math.max(bar.o,bar.c),high=side==='lower'?Math.min(bar.o,bar.c):bar.h;return high>low?{low,high,ce:(low+high)/2}:null;}
+function movement(current,previous,target){
+ if(current===target)return 'At level';
+ if(previous==null)return current>target?'Above level':'Below level';
+ if(previous<target&&current>target)return 'Crossed above';
+ if(previous>target&&current<target)return 'Crossed below';
+ const now=Math.abs(current-target),before=Math.abs(previous-target);
+ return now<before?'Toward':now>before?'Away':'Unchanged';
+}
+function readout(index){
+ const b=bars[index];
+ if(!b){$('ohlc-readout').textContent=dataset.label+' · '+dataset.date+' · ET';return;}
+ $('ohlc-readout').innerHTML='<span class="bar-time">'+time(b.t)+'</span><span class="open-value">O <b>'+fmt(b.o)+'</b></span><span>H <b>'+fmt(b.h)+'</b></span><span>L <b>'+fmt(b.l)+'</b></span><span>C <b style="color:'+(b.c>=b.o?colors.mint:colors.rose)+'">'+fmt(b.c)+'</b></span>';
+}
+function drawChart(){
+ const W=Math.max(300,stage.clientWidth),H=Math.max(280,stage.clientHeight),small=W<650;
+ svg.setAttribute('viewBox','0 0 '+W+' '+H);
+ const m={l:small?10:18,r:small?110:156,t:64,b:42},right=W-m.r,bottom=H-m.b,pw=right-m.l,ph=bottom-m.t;
+ if(!bars.length){
+  svg.innerHTML=tag('text',{x:W/2,y:H/2,fill:colors.muted,'font-size':14,'text-anchor':'middle'},'No complete candles for this session')+tag('text',{x:W/2,y:H/2+26,fill:colors.muted,'font-size':11,'text-anchor':'middle'},'Choose another date or use the trading-day arrows.');
+  readout(0);$('chart-hint').textContent='';updatePlayback();return;
+ }
+ const prices=bars.flatMap(b=>[b.l,b.h]);
+ if(state.london&&london)prices.push(london.low,london.high);
+ const dataLow=Math.min(...prices),dataHigh=Math.max(...prices),pad=Math.max(5,(dataHigh-dataLow)*.12);
+ const boundLo=dataLow-pad,boundHi=dataHigh+pad,slotCount=dataset.slots+2;
+ const edge=slot=>m.l+slot/slotCount*pw,x=i=>edge(bars[i].slot+.5),y=p=>m.t+(boundHi-p)/(boundHi-boundLo)*ph;
+ geometry={x,edge,y,right,m,pw,ph,W,H};
+ const current=bars[state.cursor],previous=bars[state.cursor-1],end=edge(bars[state.cursor].slot+1),barWidth=Math.max(2,pw/slotCount*.57),labels=[];
+ let out='<defs><clipPath id="plot-clip"><rect x="'+m.l+'" y="'+m.t+'" width="'+pw+'" height="'+ph+'"/></clipPath><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#e1eaf4"/></marker></defs>';
+ const line=(x1,y1,x2,y2,color,extra={})=>tag('line',{x1,y1,x2,y2,stroke:color,'stroke-width':1,...extra});
+ const text=(tx,ty,value,color=colors.muted,size=11,extra={})=>tag('text',{x:tx,y:ty,fill:color,'font-size':size,...extra},value);
+ const rect=(rx,ry,rw,rh,color,extra={})=>tag('rect',{x:rx,y:ry,width:Math.max(0,rw),height:Math.max(0,rh),fill:color,...extra});
+ out+=rect(0,0,W,H,'#0b111b');
+ const shortDate=value=>new Intl.DateTimeFormat('en-GB',{day:'2-digit',month:'short',timeZone:'America/New_York'}).format(new Date(value));
+ const period=dataset.session==='asia'?shortDate(dataset.startUTC)+' '+time(dataset.startUTC)+'–'+shortDate(dataset.endUTC)+' '+time(dataset.endUTC):dataset.window;
+ const context=(london?london.label.toUpperCase()+(isPartial(london)?'*':'')+' '+(small?'':london.window+' '):'NO PRIOR RANGE ')+' → '+dataset.label.toUpperCase()+' '+period+' ET';
+ out+=text(m.l,48,context,colors.muted,small?8:10,{'letter-spacing':small?.1:.5});
+ const step=niceStep((boundHi-boundLo)/5);
+ for(let p=Math.ceil(boundLo/step)*step;p<=boundHi;p+=step){out+=line(m.l,y(p),right,y(p),'#1c293a');out+=text(right+8,y(p)+3,fmt(p),'#647992',9);}
+ const timeStep=Math.max(6,Math.ceil(dataset.slots/(small?3:6)/6)*6);
+ const axisSlots=[0];for(let slot=timeStep;slot<dataset.slots-2;slot+=timeStep)axisSlots.push(slot);axisSlots.push(dataset.slots);
+ for(const slot of axisSlots){out+=line(edge(slot),m.t,edge(slot),bottom,'#172232');out+=text(edge(slot),H-15,time(new Date(new Date(dataset.startUTC).getTime()+slot*dataset.timeframe*60000)),colors.muted,10,{'text-anchor':slot===0?'start':'middle'});}
+ const completeSlots=new Set(bars.map(b=>b.slot));
+ for(let slot=0;slot<dataset.slots;slot++)if(!completeSlots.has(slot)){
+  out+=rect(edge(slot),m.t,pw/slotCount,ph,colors.rose,{'fill-opacity':.025});
+  out+=line(edge(slot+.5),bottom-12,edge(slot+.5),bottom-4,colors.rose,{'stroke-width':2});
+ }
+ if(state.london&&london){
+  out+=rect(m.l,y(london.high),pw,y(london.eq)-y(london.high),'#e6b668',{'fill-opacity':.055});
+  out+=rect(m.l,y(london.eq),pw,y(london.low)-y(london.eq),'#62d4b4',{'fill-opacity':.045});
+  out+=text(m.l+8,y(london.high)+18,'PREMIUM · '+london.label.toUpperCase(),'#bda579',9,{'letter-spacing':.6});
+  out+=text(m.l+8,y(london.low)-10,'DISCOUNT · '+london.label.toUpperCase(),'#789e94',9,{'letter-spacing':.6});
+ }
+ if(state.timing){
+  dataset.macros.forEach(([start,finish])=>{
+   out+=rect(edge(start),m.t,edge(finish)-edge(start),ph,colors.mint,{'fill-opacity':.055});
+   out+=line(edge(start),m.t,edge(start),bottom,colors.mint,{'stroke-opacity':.35,'stroke-dasharray':'2 5'});
+   out+=text((edge(start)+edge(finish))/2,bottom-10,'MACRO',colors.mint,8,{'text-anchor':'middle'});
+  });
+ }
+ if(dataset.rthSlot!=null){
+  out+=line(edge(dataset.rthSlot),m.t,edge(dataset.rthSlot),bottom,colors.mint,{'stroke-opacity':.5,'stroke-dasharray':'4 5'});
+  out+=text(edge(dataset.rthSlot)+(dataset.rthSlot===0?5:-5),m.t+12,'09:30 RTH',colors.mint,9,{'text-anchor':dataset.rthSlot===0?'start':'end'});
+ }
+ const sourceBoundarySlot=dataset.sourceBoundaryUTC?(new Date(dataset.sourceBoundaryUTC)-new Date(dataset.startUTC))/(dataset.timeframe*60000):null;
+ if(Number.isFinite(sourceBoundarySlot)&&sourceBoundarySlot>0&&sourceBoundarySlot<dataset.slots){
+  out+=line(edge(sourceBoundarySlot),m.t,edge(sourceBoundarySlot),bottom,colors.gold,{'stroke-opacity':.7,'stroke-dasharray':'3 4'});
+  out+=text(edge(sourceBoundarySlot)+5,m.t+27,'Yahoo continuation begins',colors.gold,9);
+ }
+ if(comparison&&comparison.bars?.length){
+  const base=comparison.bars[0].o||comparison.bars[0].c;
+  const values=comparison.bars.map(b=>((b.c-base)/base)*100);
+  const compareLow=Math.min(...values),compareHigh=Math.max(...values),comparePad=Math.max(.08,(compareHigh-compareLow)*.12);
+  const compareY=value=>m.t+9+(compareHigh+comparePad-value)/(compareHigh-compareLow+comparePad*2)*(ph-18);
+  const compareProgress=bars.length&&bars[state.cursor]?Math.min(1,(bars[state.cursor].slot+1)/Math.max(1,dataset.slots)):1;
+  const comparePoints=comparison.bars.filter(b=>(b.slot+.5)/Math.max(1,comparison.slots)<=compareProgress+.0001).map(b=>{
+   const value=((b.c-base)/base)*100;
+   return [m.l+(b.slot+.5)/Math.max(1,comparison.slots)*pw,compareY(value)];
+  });
+  if(comparePoints.length){
+   const comparePath=comparePoints.map(([px,py],i)=>(i?'L':'M')+px.toFixed(2)+' '+py.toFixed(2)).join(' ');
+   out+=line(m.l,compareY(0),right,compareY(0),colors.compare,{'stroke-opacity':.2,'stroke-dasharray':'2 5'});
+   out+=tag('path',{d:comparePath,fill:'none',stroke:colors.compare,'stroke-width':1.8,'stroke-opacity':.78,'stroke-dasharray':'5 4','data-overlay':'comparison-path'});
+   out+=text(m.l+6,m.t+14,'CMP · '+comparison.date+' · '+comparison.label+' · normalized close',colors.compare,small?8:9);
+  }
+ }
+ let topOffscreen=0,bottomOffscreen=0;
+ refs.filter(r=>state[r.group]).forEach(r=>{
+  if(r.value<boundLo||r.value>boundHi){const above=r.value>boundHi,py=above?m.t+12+(topOffscreen++)*28:bottom-10-(bottomOffscreen++)*28;out+=text(right+8,py,(above?'↑ ':'↓ ')+r.name,colors.muted,9);out+=text(right+8,py+12,fmt(r.value),colors.muted,10);return;}
+  out+=line(m.l,y(r.value),right,y(r.value),r.color,{'stroke-opacity':state.focus===r.id?.85:.5,'stroke-dasharray':r.id==='le'?'3 5':'7 5','stroke-width':state.focus===r.id?1.5:1});
+  labels.push({...r,py:y(r.value)});
+ });
+ const zoneVisible=state.fvg&&fvg&&state.cursor>=fvg.formedIndex;
+ if(zoneVisible){
+  const zx=edge(bars[fvg.formedIndex].slot+1),zw=Math.max(1,end-zx),top=y(fvg.high),low=y(fvg.low);
+  out+=rect(zx,top,zw,low-top,colors.violet,{'fill-opacity':.18,stroke:colors.violet,'stroke-opacity':.8,'data-overlay':'candidate-fvg'});
+  out+=line(zx,y((fvg.high+fvg.low)/2),zx+zw,y((fvg.high+fvg.low)/2),colors.violet,{'stroke-dasharray':'2 4','stroke-opacity':.6});
+  out+=line(x(fvg.formedIndex-2),y(fvg.direction==='up'?fvg.low:fvg.high),zx,y(fvg.direction==='up'?fvg.low:fvg.high),colors.violet,{'stroke-dasharray':'2 3','stroke-opacity':.5});
+  out+=line(x(fvg.formedIndex),y(fvg.direction==='up'?fvg.high:fvg.low),zx,y(fvg.direction==='up'?fvg.high:fvg.low),colors.violet,{'stroke-dasharray':'2 3','stroke-opacity':.5});
+  const cx=Math.min(right-111,Math.max(m.l+10,zx-145)),cy=Math.max(m.t+26,top-33);
+  out+=line(cx+78,cy+19,zx+2,top,colors.violet,{'stroke-opacity':.7});
+  out+=rect(cx,cy,110,21,'#221f38',{rx:5,stroke:'#665c98'});
+  out+=text(cx+8,cy+14,'FVG? · '+closeTime(fvg.formedIndex),colors.violet,10);
+ }
+ if(state.manualZone){
+  out+='<g clip-path="url(#plot-clip)">'+rect(m.l,y(state.manualZone.high),pw,y(state.manualZone.low)-y(state.manualZone.high),colors.gold,{'fill-opacity':.12,stroke:colors.gold,'stroke-dasharray':'4 4','data-overlay':'manual-zone'})+'</g>';
+  if(state.manualZone.high>=boundLo&&state.manualZone.low<=boundHi)out+=text(m.l+8,Math.max(m.t+25,y(Math.min(state.manualZone.high,boundHi))+15),state.manualLabel+' · user',colors.gold,10);
+ }
+ if(state.manualLine!=null){
+  if(state.manualLine>=boundLo&&state.manualLine<=boundHi){
+   out+=line(m.l,y(state.manualLine),right,y(state.manualLine),colors.gold,{'stroke-width':2,'data-overlay':'manual-line'});
+   labels.push({id:'manual',name:state.manualLabel.slice(0,small?13:20)+' · user',value:state.manualLine,color:colors.gold,py:y(state.manualLine)});
+  }
+ }
+ if(state.cursor<bars.length-1)out+=rect(end,m.t,right-end,ph,'#070b12',{'fill-opacity':.38,'pointer-events':'none'});
+ const selected=state.selected!=null&&state.selected<=state.cursor?state.selected:null;
+ if(selected!=null)out+=rect(edge(bars[selected].slot),m.t,pw/slotCount,ph,'#fff',{'fill-opacity':.04});
+ bars.slice(0,state.cursor+1).forEach((b,i)=>{
+  const color=b.c>=b.o?colors.mint:colors.rose,px=x(i);
+  out+='<g class="candle" data-index="'+i+'">';
+  out+=line(px,y(b.h),px,y(b.l),color,{'stroke-width':1.2});
+  out+=rect(px-barWidth/2,y(Math.max(b.o,b.c)),barWidth,Math.max(1.4,y(Math.min(b.o,b.c))-y(Math.max(b.o,b.c))),color,{rx:.6});
+  if(zoneVisible&&i>=fvg.formedIndex-2&&i<=fvg.formedIndex)out+=rect(px-barWidth/2-2,y(b.h)-3,barWidth+4,y(b.l)-y(b.h)+6,'none',{stroke:colors.violet,'stroke-opacity':.7,rx:2});
+  out+='</g>';
+ });
+ if(state.wick&&selected!=null){
+  const b=bars[selected],w=wickFor(b,state.wickSide);
+  if(w){
+   out+=line(x(selected),y(w.high),x(selected),y(w.low),colors.rose,{'stroke-width':4,'data-overlay':'selected-wick'});
+   out+=line(x(selected),y(w.ce),right,y(w.ce),colors.rose,{'stroke-width':1.5,'stroke-dasharray':'4 3','data-overlay':'wick-ce'});
+   out+=tag('circle',{cx:x(selected),cy:y(w.ce),r:3,fill:colors.rose});
+   labels.push({id:'wick',name:(state.wickSide==='lower'?'Lower':'Upper')+' wick CE',value:w.ce,color:colors.rose,py:y(w.ce)});
+  }
+ }
+ const focus=refs.find(r=>r.id===state.focus&&state[r.group])||(state.focus==='manual'&&state.manualLine!=null?{value:state.manualLine,name:state.manualLabel}:null);
+ out+=line(x(state.cursor),y(current.c),right,y(current.c),colors.white,{'stroke-opacity':.5,'stroke-dasharray':'2 4'});
+ out+=tag('circle',{cx:x(state.cursor),cy:y(current.c),r:3,fill:colors.white});
+ labels.push({id:'last',name:closeTime(state.cursor)+' close',value:current.c,color:colors.white,py:y(current.c)});
+ if(previous&&current.slot===previous.slot+1){
+  out+=line(x(state.cursor-1),y(previous.c),x(state.cursor),y(current.c),colors.white,{'stroke-width':1.8,'marker-end':'url(#arrow)','data-overlay':'observed-move'});
+ }
+ if(focus&&focus.value>=boundLo&&focus.value<=boundHi){
+  const bx=Math.min(right-8,x(state.cursor)+17),cy=y(current.c),fy=y(focus.value);
+  out+=line(bx,cy,bx,fy,colors.white,{'stroke-opacity':.5});
+  out+=line(bx-3,fy,bx+3,fy,colors.white,{'stroke-opacity':.5});
+  const diff=current.c-focus.value,relation=movement(current.c,previous&&current.slot===previous.slot+1?previous.c:null,focus.value);
+  out+=text(m.l,bottom+15,focus.name+'  '+(diff>0?'+':'')+fmt(diff)+' pts · '+relation,colors.white,small?9:11,{'data-readout':'distance'});
+ }
+ labels.sort((a,b)=>a.py-b.py);
+ const spacing=30;
+ labels.forEach((label,i)=>{label.ly=Math.max(m.t+9,label.py,i?labels[i-1].ly+spacing:0);});
+ if(labels.length&&labels.at(-1).ly>bottom-24){labels.at(-1).ly=bottom-24;for(let i=labels.length-2;i>=0;i--)labels[i].ly=Math.min(labels[i].ly,labels[i+1].ly-spacing);}
+ labels.forEach(r=>{
+  const active=state.focus===r.id;
+  out+=line(right,r.py,right+6,r.ly,r.color,{'stroke-opacity':.45});
+  out+='<g data-ref="'+r.id+'" class="level-label" style="cursor:pointer" aria-label="'+escapeText(r.name+' '+fmt(r.value))+'">';
+  out+=rect(right+6,r.ly-14,m.r-12,28,active?'#273044':'#111b29',{rx:4,stroke:active?r.color:'#223044','stroke-opacity':.7});
+  out+=text(right+12,r.ly-3,r.name,r.color,small?9:10);
+  out+=text(right+12,r.ly+9,fmt(r.value),r.color,small?10:11,{'font-weight':600});
+  out+='</g>';
+ });
+ if(state.manualLine!=null&&(state.manualLine<boundLo||state.manualLine>boundHi)||state.manualZone&&(state.manualZone.low<boundLo||state.manualZone.high>boundHi)){
+  out+=text(m.l,m.t+30,'Manual drawing outside view · adjust its prices',colors.gold,10);
+ }
+ out+='<g id="candle-hits">';
+ bars.slice(0,state.cursor+1).forEach((b,i)=>{out+=rect(edge(b.slot),m.t,pw/slotCount,ph,'transparent',{'class':'candle-hit','data-index':i,style:'cursor:crosshair'});});
+ out+='</g>';
+ svg.innerHTML=out;
+ readout(state.hover!=null&&state.hover<=state.cursor?state.hover:state.cursor);
+ updatePlayback();
+ const missingWick=state.wick&&selected!=null&&!wickFor(bars[selected],state.wickSide);
+ $('chart-hint').textContent=missingWick?'No '+state.wickSide+' wick on selected candle':state.wick&&selected!=null?time(bars[selected].t)+' · '+state.wickSide+' wick selected':'Click a candle: wick CE · Click a level: distance';
+ for(const key of ['london','rth','fvg','wick','timing'])$('show-'+key).setAttribute('aria-pressed',state[key]);
+}
+
+function isPartial(range){return range.sourceMinutes!==range.expectedMinutes;}
+function sourceSummary(data){
+ return Object.entries(data.sourceCounts||{}).map(([key,count])=>(data.sourceLabels?.[key]||key)+' · '+count+' 1m rows').join(' + ')||'No source rows';
+}
+function comparisonSummary(data){
+ return data?data.date+' · '+data.label+' · '+data.timeframeLabel+' · '+data.bars.length+'/'+data.expectedBars+' complete candles':'';
+}
+function updateCompareUI(){
+ const button=$('compare-day'),hint=$('compare-hint');
+ button.textContent=comparison?'Compare: '+comparison.date:'Compare day';
+ button.setAttribute('aria-pressed',String(Boolean(comparison)));
+ button.title=comparison?'Change or clear the normalized comparison overlay':'Overlay another day as a normalized close path';
+ hint.hidden=!comparison;
+ hint.textContent=comparison?'CMP · '+comparison.date+' '+comparison.label+' · normalized close path':'';
+ $('compare-detail').textContent=comparison?'Overlay active: '+comparisonSummary(comparison)+'. The dashed path is normalized to that day’s opening price so the shape can be compared with the active chart.':'The comparison is drawn as a normalized close path, so its shape can be compared even when price levels differ.';
+}
+function clearComparison(closeDialog=false){
+ comparisonRequestController?.abort();comparisonRequestController=null;comparison=null;
+ const url=new URL(location.href);url.searchParams.delete('compareDate');url.searchParams.delete('compareSession');history.replaceState(null,'',url);
+ updateCompareUI();updateDataDetails();drawChart();
+ if(closeDialog&&$('compare-dialog').open)$('compare-dialog').close();
+}
+async function loadComparison(day,session){
+ if(!historyMeta)throw Error('The local history service is unavailable.');
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(day)||!historyMeta.sessions.some(item=>item.id===session))throw Error('Choose a valid comparison date and session.');
+ comparisonRequestController?.abort();comparisonRequestController=new AbortController();const controller=comparisonRequestController,id=++comparisonRequestNumber;
+ $('compare-error').textContent='';$('compare-detail').textContent='Loading comparison…';
+ try{
+  const query=new URLSearchParams({date:day,session,timeframe:String(dataset.timeframe||1)});
+  const response=await fetch('/api/ict/session?'+query,{signal:controller.signal,cache:'no-store'});
+  const data=await response.json();if(!response.ok)throw Error(data.error||'Comparison day could not be loaded.');
+  if(!data.bars.length)throw Error('No complete candles are available for that comparison session.');
+  if(id!==comparisonRequestNumber)return false;
+  comparison=data;
+  $('compare-date').value=data.date;$('compare-session').value=data.session;
+  const url=new URL(location.href);url.searchParams.set('compareDate',data.date);url.searchParams.set('compareSession',data.session);history.replaceState(null,'',url);
+  updateCompareUI();updateDataDetails();drawChart();
+  return true;
+ }finally{
+  if(id===comparisonRequestNumber)comparisonRequestController=null;
+ }
+}
+async function primeComparisonForm(){
+ if(comparison)return;
+ try{
+  const query=new URLSearchParams({date:dataset.date,session:dataset.session,timeframe:String(dataset.timeframe||1),direction:'prev'});
+  const response=await fetch('/api/ict/session?'+query,{cache:'no-store'});
+  if(!response.ok)return;
+  const data=await response.json();
+  if($('compare-dialog').open&&data.date){$('compare-date').value=data.date;}
+ }catch{}
+}
+function niceStep(raw){const power=10**Math.floor(Math.log10(Math.max(raw,.25))),scaled=raw/power;return Math.max(.25,([1,2,2.5,5,10].find(n=>n>=scaled)||10)*power);}
+function findCandidate(data){
+ const anchor=data.rthSlot??0;
+ for(let i=2;i<data.bars.length;i++){
+  const a=data.bars[i-2],b=data.bars[i-1],c=data.bars[i];
+  if(c.slot+1<=anchor||c.slot!==b.slot+1||b.slot!==a.slot+1)continue;
+  if(c.l>a.h)return {low:a.h,high:c.l,formedIndex:i,direction:'up'};
+  if(c.h<a.l)return {low:c.h,high:a.l,formedIndex:i,direction:'down'};
+ }
+ return null;
+}
+function currentKey(){return dataset.date+'/'+dataset.session+'/'+dataset.timeframe;}
+function configureDataset(data,remember=true){
+ if(remember)drawingsBySession.set(currentKey(),{
+  selected:state.selected,wick:state.wick,wickSide:state.wickSide,manualLine:state.manualLine,
+  manualZone:state.manualZone,manualLabel:state.manualLabel,
+  inputs:['user-label','user-pd-level','user-fvg-high','user-fvg-low'].map(id=>$(id).value)
+ });
+ dataset=data;bars=data.bars;london=data.previous;fvg=findCandidate(data);refs=[];
+ if(london){const name=london.label+(isPartial(london)?'*':'');refs.push(
+  {id:'lh',name:name+' H',value:london.high,color:colors.gold,group:'london'},
+  {id:'le',name:name+' EQ',value:london.eq,color:colors.gold,group:'london'},
+  {id:'ll',name:name+' L',value:london.low,color:colors.gold,group:'london'}
+ );}
+ if(data.priorRTH){const r=data.priorRTH,name='Prior RTH'+(isPartial(r)?'*':'');refs.push(
+  {id:'rh',name:name+' H',value:r.high,color:colors.muted,group:'rth'},
+  {id:'rl',name:name+' L',value:r.low,color:colors.muted,group:'rth'},
+  {id:'rc',name:name+' C',value:r.close,color:colors.muted,group:'rth'}
+ );}
+ Object.assign(state,{cursor:Math.max(0,bars.length-1),selected:null,hover:null,focus:london?'lh':null,wick:false,wickSide:'lower',manualLine:null,manualZone:null,manualLabel:'Reviewed PD array'});
+ const saved=drawingsBySession.get(currentKey());
+ if(saved)Object.assign(state,saved);
+ ['user-label','user-pd-level','user-fvg-high','user-fvg-low'].forEach((id,i)=>$(id).value=saved?.inputs?.[i]||'');
+ $('wick-side').value=state.wickSide;
+ $('trade-date').value=data.date;$('trading-session').value=data.session;$('chart-timeframe').value=String(data.timeframe);
+ $('trade-date').title=data.session==='asia'?'Asia starts at 20:00 on the calendar evening before this trading date.':'Trading date in America/New_York.';
+ $('prior-range-label').textContent=london?london.label+(isPartial(london)?'*':'')+' range':'Prior range';
+ $('show-london').title=london?'Trade date '+london.date+' · '+london.window+' ET'+(london.id==='asia'?' (starts the prior evening)':'')+' · '+london.sourceMinutes+'/'+london.expectedMinutes+' source minutes':'No prior range found in the preceding 14 days';
+ $('show-london').disabled=!london;$('show-rth').disabled=!data.priorRTH;
+ $('show-fvg').title=fvg?'Example candidate forms at '+closeTime(fvg.formedIndex)+' ET':'No complete three-candle gap found after the example anchor';
+ $('show-fvg').disabled=!fvg;
+ $('show-wick').disabled=!bars.length;
+ for(const key of ['london','rth','fvg','wick','timing'])$('show-'+key).setAttribute('aria-pressed',state[key]);
+ svg.setAttribute('aria-label','NQ '+data.label+' '+data.date+' '+data.window+' ET. Use the timeline to inspect candles; select a candle for its wick or a reference label for distance.');
+ document.title='NQ · '+data.label+' · '+data.date+' · '+data.timeframeLabel;
+ updateCompareUI();configureJumps();updateDataDetails();updateDateButtons();drawChart();
+}
+function configureJumps(){
+ const options=[{index:bars.length-1,label:'Full session'}];
+ for(const hour of ['08:30','09:30']){
+  const index=bars.findIndex(b=>time(b.t)===hour);
+  if(index>=0)options.push({index,label:hour==='09:30'?'09:30 open':'08:30 bar'});
+ }
+ if(fvg){options.push({index:fvg.formedIndex,label:'FVG formed'});const revisit=bars.findIndex((b,i)=>i>fvg.formedIndex&&b.l<=fvg.high&&b.h>=fvg.low);if(revisit>=0)options.push({index:revisit,label:'FVG revisit'});}
+ jumpIndices=[...new Set(options.map(o=>o.index).filter(i=>i>=0))];
+ $('jump').innerHTML='<option value="" disabled>Jump to…</option>'+options.filter(o=>o.index>=0).map(o=>'<option value="'+o.index+'">'+o.label+'</option>').join('');
+}
+function updatePlayback(){
+ const empty=!bars.length;
+ $('replay').max=Math.max(0,bars.length-1);$('replay').value=state.cursor;
+ $('replay').disabled=empty||loading;$('play').disabled=empty||loading;$('jump').disabled=empty||loading;
+ $('step-back').disabled=empty||loading||state.cursor===0;
+ $('step-forward').disabled=empty||loading||state.cursor>=bars.length-1;
+ $('replay-time').textContent=empty?'—':closeTime(state.cursor)+' ET';
+ $('replay').setAttribute('aria-valuetext',empty?'No complete candles':time(bars[state.cursor].t)+' bar, closed '+closeTime(state.cursor)+' ET, close '+fmt(bars[state.cursor].c));
+ $('jump').value=jumpIndices.includes(state.cursor)?String(state.cursor):'';
+}
+function updateDateButtons(){
+ $('previous-date').disabled=!historyMeta||loading||dataset.date<=historyMeta.minDate;
+ $('next-date').disabled=!historyMeta||loading||dataset.date>=historyMeta.maxDate;
+ $('latest-date').disabled=!historyMeta||loading;
+}
+function updateDataDetails(){
+ const d=dataset,last=bars.at(-1),coverage=d.sourceMinutes+'/'+d.expectedMinutes+' 1m source rows';
+ $('data-footer').textContent='NQ · '+d.date+' · '+d.timeframeLabel+' · '+coverage+(last?' · close '+closeTime(bars.length-1)+' ET':' · no complete bars')+(isPartial(d)?' · gaps':'')+(comparison?' · cmp '+comparison.date:'');
+ $('data-footer').title='Read-only NQ SQLite · '+d.startUTC+' to '+d.endUTC+' · '+bars.length+' '+d.timeframeLabel+' candles · '+sourceSummary(d);
+ $('active-session-title').textContent=d.label+' · '+d.date+' · '+d.window+' ET';
+ $('active-data-detail').textContent=d.timeframeLabel+' chart from '+coverage+' observed; '+bars.length+'/'+d.expectedBars+' complete '+d.timeframeLabel+' candles. Source window '+d.startUTC+' to '+d.endUTC+'. Latest one-minute source open: '+(d.lastUTC||'none')+'. Sources: '+sourceSummary(d)+'. '+(d.session==='asia'?'Asia begins on the prior calendar evening.':'')+(comparison?' Comparison overlay: '+comparisonSummary(comparison)+'.':'');
+ $('active-prior-detail').textContent=d.previous?'Prior comparator: '+d.previous.label+' · trade date '+d.previous.date+' · '+d.previous.window+' ET'+(d.previous.id==='asia'?' (starts the prior evening)':'')+'. '+d.previous.sourceMinutes+'/'+d.previous.expectedMinutes+' minutes; H '+fmt(d.previous.high)+', L '+fmt(d.previous.low)+', EQ '+fmt(d.previous.eq)+'. '+(isPartial(d.previous)?'Incomplete observed range, marked * on chart.':''):'No prior comparator with observations was found in the preceding 14 days.';
+ if(d.priorRTH)$('active-prior-detail').textContent+=' Prior RTH: '+d.priorRTH.date+', '+d.priorRTH.sourceMinutes+'/'+d.priorRTH.expectedMinutes+' minutes.';
+ $('active-fvg-detail').textContent=fvg?'Candidate bounds: '+fmt(fvg.low)+'–'+fmt(fvg.high)+'; available at '+closeTime(fvg.formedIndex)+' ET.':'No complete three-candle candidate was found after the example anchor.';
+ if(historyMeta)$('history-range').textContent='Available source history: '+historyMeta.firstUTC+' to '+historyMeta.lastUTC+'. Date/session availability can vary within that range.';
+}
+function navigationMessage(message){
+ $('navigation-status').textContent=message;$('navigation-status').hidden=!message;
+}
+async function loadSession(day,session,direction='',timeframe=Number($('chart-timeframe').value||1)){
+ if(!historyMeta)return;
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(day)){navigationMessage('Choose a valid date.');return;}
+ pause();requestController?.abort();requestController=new AbortController();const controller=requestController,id=++requestNumber;
+ loading=true;navigationMessage('');$('load-state').hidden=false;$('load-state').textContent='Loading '+day+'…';stage.setAttribute('aria-busy','true');
+ updateDateButtons();updatePlayback();
+ const timeout=setTimeout(()=>controller.abort(),12000);
+ try{
+  const query=new URLSearchParams({date:day,session,timeframe:String(timeframe)});if(direction)query.set('direction',direction);
+  const response=await fetch('/api/ict/session?'+query,{signal:controller.signal,cache:'no-store'});
+  const data=await response.json();if(!response.ok)throw Error(data.error||'Session could not be loaded.');
+  if(id!==requestNumber)return;
+  loading=false;configureDataset(data);
+  if(comparison&&comparison.timeframe!==data.timeframe){
+   try{await loadComparison(comparison.date,comparison.session);}catch{clearComparison();}
+  }
+  const url=new URL(location.href);url.searchParams.set('date',data.date);url.searchParams.set('session',data.session);url.searchParams.set('timeframe',String(data.timeframe));history.replaceState(null,'',url);
+ }catch(error){
+  if(id!==requestNumber)return;
+  $('trade-date').value=dataset.date;$('trading-session').value=dataset.session;
+  navigationMessage(error.name==='AbortError'?'Loading timed out. Try the date again.':error.message);
+ }finally{
+  clearTimeout(timeout);
+  if(id===requestNumber){loading=false;$('load-state').hidden=true;stage.setAttribute('aria-busy','false');updateDateButtons();updatePlayback();}
+ }
+}
+async function initializeNavigation(){
+ $('previous-date').disabled=true;$('next-date').disabled=true;$('latest-date').disabled=true;
+ const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),8000);
+ try{
+  const response=await fetch('/api/ict/meta',{signal:controller.signal,cache:'no-store'});
+  if(!response.ok)throw Error('No history service');
+  historyMeta=await response.json();
+  if(!historyMeta.minDate||!historyMeta.maxDate)throw Error('No history bounds');
+  $('trade-date').min=historyMeta.minDate;$('trade-date').max=historyMeta.maxDate;
+  const query=new URLSearchParams(location.search),requested=query.get('date'),session=query.get('session'),requestedTimeframe=Number(query.get('timeframe')||1);
+  const selectedSession=historyMeta.sessions.some(s=>s.id===session)?session:'nyam';
+  const selectedTimeframe=[1,5].includes(requestedTimeframe)?requestedTimeframe:1;
+  $('chart-timeframe').value=String(selectedTimeframe);
+  $('compare-date').min=historyMeta.minDate;$('compare-date').max=historyMeta.maxDate;
+  updateDateButtons();
+  await loadSession(requested||historyMeta.maxDate,selectedSession,requested?'':'latest',selectedTimeframe);
+  const compareDate=query.get('compareDate'),compareSession=query.get('compareSession');
+  if(compareDate&&historyMeta.sessions.some(item=>item.id===compareSession)){
+   try{await loadComparison(compareDate,compareSession);}catch{clearComparison();}
+  }
+ }catch{
+  historyMeta=null;
+  $('trade-date').min=fallback.date;$('trade-date').max=fallback.date;
+  $('trade-date').disabled=true;$('trading-session').disabled=true;$('compare-day').disabled=true;
+  navigationMessage('Saved demo only · date navigation needs the local history server.');
+ }finally{clearTimeout(timeout);}
+}
+$('trade-date').addEventListener('change',event=>loadSession(event.target.value,$('trading-session').value));
+$('trading-session').addEventListener('change',event=>loadSession($('trade-date').value,event.target.value));
+$('chart-timeframe').addEventListener('change',event=>loadSession($('trade-date').value,$('trading-session').value,'',Number(event.target.value)));
+$('previous-date').addEventListener('click',()=>loadSession(dataset.date,$('trading-session').value,'prev'));
+$('next-date').addEventListener('click',()=>loadSession(dataset.date,$('trading-session').value,'next'));
+$('latest-date').addEventListener('click',()=>loadSession(dataset.date,$('trading-session').value,'latest'));
+$('compare-day').addEventListener('click',async()=>{
+ pause();$('compare-error').textContent='';$('compare-date').min=historyMeta?.minDate||fallback.date;$('compare-date').max=historyMeta?.maxDate||fallback.date;
+ $('compare-date').value=comparison?.date||dataset.previous?.date||dataset.date;$('compare-session').value=comparison?.session||dataset.session;
+ updateCompareUI();$('compare-dialog').showModal();await primeComparisonForm();
+});
+$('compare-form').addEventListener('submit',async event=>{
+ event.preventDefault();
+ try{await loadComparison($('compare-date').value,$('compare-session').value);$('compare-dialog').close();}
+ catch(error){$('compare-error').textContent=error.name==='AbortError'?'Comparison loading was cancelled.':error.message;updateCompareUI();}
+});
+$('clear-comparison').addEventListener('click',()=>clearComparison(true));
+
+function pause(){clearInterval(playTimer);playTimer=null;$('play').textContent='▶';$('play').setAttribute('aria-label','Play historical candles');}
+function setCursor(index){state.cursor=Math.max(0,Math.min(bars.length-1,Number(index)));state.hover=null;drawChart();}
+for(const key of ['london','rth','fvg','wick','timing'])$('show-'+key).addEventListener('click',()=>{
+ state[key]=!state[key];if(key==='wick'&&state.wick&&state.selected==null)state.selected=state.cursor;
+ if(state.focus!=='manual'&&!refs.find(r=>r.id===state.focus&&state[r.group]))state.focus=null;
+ drawChart();
+});
+svg.addEventListener('click',event=>{
+ const ref=event.target.closest('[data-ref]');
+ if(ref&&refs.some(r=>r.id===ref.dataset.ref)||ref&&ref.dataset.ref==='manual'){state.focus=ref.dataset.ref;drawChart();return;}
+ const hit=event.target.closest('.candle-hit');
+ if(hit){state.selected=Number(hit.dataset.index);state.wick=true;drawChart();}
+});
+svg.addEventListener('pointermove',event=>{const hit=event.target.closest('.candle-hit');if(hit){state.hover=Number(hit.dataset.index);readout(state.hover);}});
+svg.addEventListener('pointerleave',()=>{state.hover=null;readout(state.cursor);});
+svg.addEventListener('keydown',event=>{if(event.key==='ArrowLeft'||event.key==='ArrowRight'){event.preventDefault();pause();setCursor(state.cursor+(event.key==='ArrowLeft'?-1:1));}});
+$('replay').addEventListener('input',event=>{pause();setCursor(event.target.value);});
+$('step-back').addEventListener('click',()=>{pause();setCursor(state.cursor-1);});
+$('step-forward').addEventListener('click',()=>{pause();setCursor(state.cursor+1);});
+$('jump').addEventListener('change',event=>{pause();setCursor(event.target.value);});
+$('play').addEventListener('click',()=>{
+ if(playTimer){pause();return;}if(state.cursor===bars.length-1)setCursor(0);
+ $('play').textContent='Ⅱ';$('play').setAttribute('aria-label','Pause historical candles');
+ playTimer=setInterval(()=>{setCursor(state.cursor+1);if(state.cursor===bars.length-1)pause();},700);
+});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)pause();});
+function openDialog(id){pause();$(id).showModal();}
+$('open-drawings').addEventListener('click',()=>openDialog('drawing-dialog'));
+$('open-notes').addEventListener('click',()=>openDialog('notes-dialog'));
+$('open-data').addEventListener('click',()=>{openDialog('notes-dialog');$('data-details').scrollIntoView();});
+document.querySelectorAll('[data-close]').forEach(button=>button.addEventListener('click',()=>button.closest('dialog').close()));
+document.querySelectorAll('.library-nav a').forEach(link=>link.addEventListener('click',event=>{event.preventDefault();document.querySelector(link.getAttribute('href')).scrollIntoView({behavior:'smooth'});}));
+$('drawing-form').addEventListener('submit',event=>{
+ event.preventDefault();
+ const raw=['user-pd-level','user-fvg-high','user-fvg-low'].map(id=>$(id).value.trim());
+ const [level,high,low]=raw.map(value=>value===''?null:Number(value));
+ const valid=number=>number==null||(Number.isFinite(number)&&number>0&&Math.abs(number*4-Math.round(number*4))<1e-7);
+ if(![level,high,low].every(valid)){ $('drawing-error').textContent='Enter positive prices in 0.25-point increments.';return;}
+ if((high==null)!==(low==null)||high!=null&&high<=low){$('drawing-error').textContent='Enter both FVG boundaries, with the high above the low.';return;}
+ state.manualLine=level;state.manualZone=high==null?null:{high,low};state.manualLabel=$('user-label').value.trim()||'Reviewed PD array';state.wickSide=$('wick-side').value;
+ if(level!=null)state.focus='manual';
+ $('drawing-error').textContent='';$('drawing-dialog').close();drawChart();
+});
+$('clear-drawings').addEventListener('click',()=>{state.manualLine=null;state.manualZone=null;if(state.focus==='manual')state.focus='lh';['user-pd-level','user-fvg-high','user-fvg-low','user-label'].forEach(id=>$(id).value='');$('drawing-error').textContent='';drawChart();});
+$('reset-view').addEventListener('click',()=>{pause();Object.assign(state,{cursor:Math.max(0,bars.length-1),selected:null,hover:null,focus:'lh',london:true,rth:false,fvg:true,wick:false,timing:false});drawChart();});
+const notesKey='ict-notes-demo-v1',notes=$('journal-notes'),saveStatus=$('save-status');
+try{const saved=localStorage.getItem(notesKey);if(saved){notes.value=saved;saveStatus.textContent='Saved draft loaded.';}}catch{saveStatus.textContent='Browser storage unavailable; download to keep notes.';}
+let saveTimer;
+notes.addEventListener('input',()=>{clearTimeout(saveTimer);saveTimer=setTimeout(()=>{try{localStorage.setItem(notesKey,notes.value);saveStatus.textContent='Draft saved in this browser.';}catch{saveStatus.textContent='Download to keep these notes.';}},250);});
+$('download-notes').addEventListener('click',()=>{const url=URL.createObjectURL(new Blob(['# ICT observation notes\n\n'+notes.value+'\n'],{type:'text/markdown'}));const a=document.createElement('a');a.href=url;a.download='ict-observation-notes.md';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
+document.querySelectorAll('.flashcard button').forEach(button=>button.addEventListener('click',()=>button.closest('.flashcard').classList.toggle('revealed')));
+configureDataset(fallback,false);
+new ResizeObserver(drawChart).observe(stage);
+initializeNavigation();
+</script>
+</body>
+</html>
