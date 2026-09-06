@@ -8,15 +8,15 @@
 <style>
 :root{color-scheme:dark;--bg:#0b111b;--panel:#111b29;--line:#243246;--text:#e1eaf4;--muted:#91a2b8;--gold:#e6b668;--blue:#aa9aff;--green:#62d4b4;--red:#f18491}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:13px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input,select,textarea{font:inherit;color:inherit}button,select{border:1px solid var(--line);background:var(--panel);border-radius:7px;padding:7px 11px;cursor:pointer}button:hover,select:hover{border-color:#60748e}button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,svg:focus-visible{outline:2px solid var(--gold);outline-offset:2px}button:disabled{opacity:.4;cursor:default}button[aria-pressed=true]{background:#243246;border-color:#62738a;color:#fff}a{color:#afcaff}button.primary{background:#e6b668;color:#101821;border-color:#e6b668}svg text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-.workspace{height:100dvh;min-height:510px;display:grid;grid-template-rows:55px 44px minmax(280px,1fr) 50px 25px;overflow:hidden}.appbar{display:flex;align-items:center;gap:17px;padding:0 18px;border-bottom:1px solid var(--line)}.identity{display:flex;align-items:center;gap:10px;white-space:nowrap}.identity strong{font-size:20px;letter-spacing:-.6px}.badge{font-size:10px;color:var(--muted);border:1px solid var(--line);padding:4px 6px;border-radius:4px}.timeframe-select{font-size:11px;padding:5px 7px;width:54px}.session-title{display:flex;gap:12px;align-items:center;font-size:12px}.session-title span{color:var(--muted)}.app-actions{margin-left:auto;display:flex;gap:6px}.app-actions button{font-size:12px}.toolbar{display:flex;align-items:center;gap:6px;padding:0 18px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}.toolbar button{font-size:11px;padding:5px 9px;white-space:nowrap;background:transparent}.toolbar button[aria-pressed=true]{background:#1a283a}.swatch{display:inline-block;width:7px;height:7px;border-radius:2px;margin-right:6px;background:var(--gold)}.violet{background:var(--blue)}.mint{background:var(--green)}.gray{background:var(--muted)}.rose{background:var(--red)}.toolbar .draw-button{margin-left:auto}
-.chart-stage{position:relative;min-height:0;overflow:hidden}.readout{position:absolute;top:12px;left:18px;right:12px;display:flex;gap:12px;align-items:center;pointer-events:none;font:11px ui-monospace,SFMono-Regular,Consolas,monospace;z-index:1}.readout span{color:var(--muted)}.readout b{font-weight:500;color:var(--text)}.readout .bar-time{color:var(--text)}#price-chart{display:block;width:100%;height:100%;touch-action:pan-y;outline-offset:-3px}.compare-hint{position:absolute;top:11px;right:18px;max-width:42%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#9eafff;font-size:10px;text-align:right;pointer-events:none}.compare-hint[hidden]{display:none}.chart-hint{position:absolute;left:18px;bottom:43px;color:#8091a8;font-size:10px;pointer-events:none}.playback{display:flex;align-items:center;gap:9px;padding:0 18px;border-top:1px solid var(--line);background:#0f1825}.playback button{font-size:12px;padding:6px 9px;min-width:30px}.playback label{font-size:11px;color:var(--muted)}#replay{flex:1;min-width:40px;accent-color:var(--gold);cursor:pointer}#replay-time{font:11px ui-monospace,SFMono-Regular,monospace;min-width:62px}.playback select{font-size:11px;max-width:144px;padding:6px}.footnote{display:flex;align-items:center;justify-content:space-between;padding:0 18px;color:#8193ab;font-size:10px}.footnote button{border:0;background:none;padding:0;color:#9dabc0;font-size:10px}
+.workspace{height:100dvh;min-height:510px;display:grid;grid-template-rows:55px 44px minmax(280px,1fr) 50px 25px;overflow:hidden}.appbar{display:flex;align-items:center;gap:17px;padding:0 18px;border-bottom:1px solid var(--line)}.identity{display:flex;align-items:center;gap:10px;white-space:nowrap}.identity strong{font-size:20px;letter-spacing:-.6px}.badge{font-size:10px;color:var(--muted);border:1px solid var(--line);padding:4px 6px;border-radius:4px}.timeframe-select{font-size:11px;padding:5px 7px;width:54px}.session-title{display:flex;gap:12px;align-items:center;font-size:12px}.session-title span{color:var(--muted)}.app-actions{margin-left:auto;display:flex;gap:6px;align-items:center}.app-actions button{font-size:12px}.renderer-select{font-size:11px;padding:6px 7px;max-width:132px}.toolbar{display:flex;align-items:center;gap:6px;padding:0 18px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}.toolbar button{font-size:11px;padding:5px 9px;white-space:nowrap;background:transparent}.toolbar button[aria-pressed=true]{background:#1a283a}.toolbar .focus-select{font-size:11px;padding:5px 8px;max-width:150px}.swatch{display:inline-block;width:7px;height:7px;border-radius:2px;margin-right:6px;background:var(--gold)}.violet{background:var(--blue)}.mint{background:var(--green)}.gray{background:var(--muted)}.rose{background:var(--red)}.toolbar .draw-button{margin-left:auto}
+.chart-stage{position:relative;min-height:0;overflow:hidden}.readout{position:absolute;top:12px;left:18px;right:12px;display:flex;gap:12px;align-items:center;pointer-events:none;font:11px ui-monospace,SFMono-Regular,Consolas,monospace;z-index:3}.readout span{color:var(--muted)}.readout b{font-weight:500;color:var(--text)}.readout .bar-time{color:var(--text)}#price-chart,#lwc-chart{display:block;width:100%;height:100%;touch-action:pan-y;outline-offset:-3px}#lwc-chart{position:absolute;inset:0}#price-chart[hidden],#lwc-chart[hidden]{display:none}.compare-hint{position:absolute;top:11px;right:18px;max-width:42%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#9eafff;font-size:10px;text-align:right;pointer-events:none;z-index:3}.compare-hint[hidden]{display:none}.chart-hint{position:absolute;left:18px;bottom:43px;color:#8091a8;font-size:10px;pointer-events:none;z-index:3}.playback{display:flex;align-items:center;gap:9px;padding:0 18px;border-top:1px solid var(--line);background:#0f1825}.playback button{font-size:12px;padding:6px 9px;min-width:30px}.playback label{font-size:11px;color:var(--muted)}#replay{flex:1;min-width:40px;accent-color:var(--gold);cursor:pointer}#replay-time{font:11px ui-monospace,SFMono-Regular,monospace;min-width:62px}.playback select{font-size:11px;max-width:144px;padding:6px}.footnote{display:flex;align-items:center;justify-content:space-between;padding:0 18px;color:#8193ab;font-size:10px}.footnote button{border:0;background:none;padding:0;color:#9dabc0;font-size:10px}
 dialog{border:1px solid #3a4b64;background:var(--panel);color:var(--text);border-radius:12px;box-shadow:0 24px 100px #0009;padding:0;width:min(640px,calc(100% - 28px));max-height:85dvh}dialog::backdrop{background:#030811aa;backdrop-filter:blur(3px)}.dialog-head{position:sticky;top:0;display:flex;align-items:center;justify-content:space-between;background:var(--panel);padding:15px 20px;border-bottom:1px solid var(--line);z-index:2}.dialog-head h2{font-size:16px;margin:0}.dialog-content{padding:20px;line-height:1.55}.dialog-content p{color:#adbbcd;font-size:12px}.dialog-content h3{font-size:13px;margin:20px 0 6px}.input-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.input-grid label{display:grid;gap:5px;font-size:11px;color:var(--muted)}.input-grid input,.input-grid select,textarea{width:100%;background:#0a1421;border:1px solid #3b4a60;border-radius:6px;padding:9px}.input-grid .wide{grid-column:1/-1}.dialog-actions{display:flex;gap:8px;margin-top:17px}.error{color:#ffadb4!important;min-height:18px;margin-bottom:0}.library-nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}.library-nav a{font-size:11px}.section{margin:24px 0;scroll-margin-top:75px}.section-head h2{font-size:17px;margin:0}.section-head p{margin:5px 0 16px}.eyebrow,.source,.tag,.field-label{font-size:10px;color:var(--gold)}.panel,.concept-card,.flashcard{border:1px solid var(--line);border-radius:8px;padding:13px;margin:10px 0}.card-header{display:flex;gap:12px;justify-content:space-between;font-size:12px}.quote,.quote-note,.array-card p,.time-card p{font-size:12px;line-height:1.6}.array-card,.time-card,.source-item{margin:15px 0}.array-icon{color:var(--gold);font-size:10px}.array-card strong,.time-card strong,.source-item strong{font-size:12px}.time,.field-value{font-size:12px;color:var(--muted)}.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.field span{display:block}.field-grid+.quote-note{display:none}.field-grid{display:none}.form-actions,.source-item{display:flex;justify-content:space-between;gap:15px}.source-item small{display:block;color:var(--muted);font-size:11px}.source-item a{font-size:11px;white-space:nowrap}textarea{margin:10px 0;min-height:180px;resize:vertical}.save-status{font-size:11px;color:var(--muted)}.gap-list{font-size:12px;color:#adbbcd;padding-left:16px}.gap-list li{margin:8px 0}.flashcard button{width:100%;text-align:left}.flashcard button span{float:right;font-size:9px;color:var(--gold)}.flashcard-answer{display:none;padding-top:14px;font-size:12px}.flashcard.revealed .flashcard-answer{display:block}.context-flow{display:flex;flex-wrap:wrap;gap:8px}.flow-step{flex:1;min-width:130px;font-size:11px}.flow-step span{display:block;color:var(--muted);margin-top:4px}
 @media(max-width:650px){.workspace{grid-template-rows:48px 42px minmax(280px,1fr) 48px 24px}.appbar,.toolbar,.playback{padding-left:10px;padding-right:10px}.appbar{gap:10px}.session-title{font-size:11px;display:block}.session-title span{display:block;font-size:10px;margin-top:2px}.identity{gap:6px}.identity strong{font-size:18px}.app-actions button{padding:6px 8px;font-size:11px}.readout{left:10px;top:10px;gap:7px;font-size:9px}.readout .open-value{display:none}.compare-hint{right:10px;top:30px;max-width:58%;font-size:9px}.chart-hint{left:10px;font-size:9px;max-width:70%}.playback{gap:6px}.playback label{display:none}.playback select{max-width:98px;font-size:10px}.footnote{padding:0 10px;font-size:9px}.footnote .long-footer{display:none}.toolbar .draw-button{margin-left:0}.dialog-content{padding:15px}}
 @media print{.workspace{height:95vh}.app-actions,.toolbar,.playback,.chart-hint,.footnote button{visibility:hidden}dialog{display:none}}
 
 .market-picker{display:flex;align-items:center;gap:8px;min-width:0}.date-nav{display:flex;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:6px}.date-nav button{border:0;background:transparent;padding:6px;width:26px}.date-nav input{border:0;background:transparent;padding:5px 2px;width:124px;font-size:12px;color:var(--text)}.market-picker select{font-size:11px;width:165px;min-width:0}.market-picker>button{font-size:11px;padding:7px 9px}.load-state{position:absolute;inset:0;display:grid;place-content:center;text-align:center;gap:8px;z-index:3;background:var(--bg);font-size:13px;color:var(--muted)}.load-state[hidden],.navigation-status[hidden]{display:none}.navigation-status{position:absolute;top:34px;right:14px;z-index:3;max-width:80%;font-size:11px;padding:7px 10px;background:#352d20;border:1px solid #806742;border-radius:6px;color:#f4d7a6}.appbar{gap:10px}.footnote span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:10px}.footnote button{white-space:nowrap}
 @media(max-width:850px){.workspace{grid-template-rows:96px 42px minmax(280px,1fr) 48px 24px}.appbar{display:grid;grid-template-columns:auto 1fr;grid-template-rows:39px 48px;gap:0 8px;padding-top:3px}.identity{grid-row:1;grid-column:1}.app-actions{grid-row:1;grid-column:2}.market-picker{grid-row:2;grid-column:1/-1;justify-content:space-between}.market-picker select{flex:1;max-width:230px}}
-@media(max-width:440px){.date-nav input{width:111px;font-size:11px}.date-nav button{width:22px}.market-picker{gap:5px}.market-picker select{width:138px;padding:7px 4px}.market-picker>button{padding:7px 6px;font-size:10px}.app-actions button{font-size:10px}}
+@media(max-width:440px){.date-nav input{width:111px;font-size:11px}.date-nav button{width:22px}.market-picker{gap:5px}.market-picker select{width:138px;padding:7px 4px}.market-picker>button{padding:7px 6px;font-size:10px}.app-actions button{font-size:10px}.renderer-select{max-width:92px;font-size:10px}}
 </style>
 </head>
 <body>
@@ -35,7 +35,7 @@ dialog{border:1px solid #3a4b64;background:var(--panel);color:var(--text);border
       </select>
       <button id="latest-date" title="Latest available day for this session">Latest</button>
     </div>
-    <div class="app-actions"><button id="compare-day" title="Overlay another day as a normalized path">Compare day</button><button id="open-notes">Notes</button><button id="reset-view" title="Restore chart layers and full session">Reset view</button></div>
+    <div class="app-actions"><select id="chart-renderer" class="renderer-select" aria-label="Chart renderer" title="Choose interactive candles or the preserved SVG fallback"><option value="lightweight">Interactive candles</option><option value="svg">Study SVG</option></select><button id="compare-day" title="Overlay another day as a normalized path">Compare day</button><button id="open-notes">Notes</button><button id="reset-view" title="Restore chart layers and full session">Reset view</button></div>
   </header>
   <nav class="toolbar" aria-label="Chart layers">
     <button id="show-london" aria-pressed="true"><i class="swatch"></i><span id="prior-range-label">London range</span></button>
@@ -43,14 +43,16 @@ dialog{border:1px solid #3a4b64;background:var(--panel);color:var(--text);border
     <button id="show-fvg" aria-pressed="true"><i class="swatch violet"></i>FVG candidate</button>
     <button id="show-wick" aria-pressed="false"><i class="swatch rose"></i>Wick CE</button>
     <button id="show-timing" aria-pressed="false"><i class="swatch mint"></i>Macros</button>
+    <select id="focus-level" class="focus-select" aria-label="Reference used to measure whether price is moving toward or away"></select>
     <button id="open-drawings" class="draw-button">＋ Draw levels</button>
   </nav>
   <section class="chart-stage" aria-label="Interactive killzone chart">
-    <div class="readout" id="ohlc-readout"></div>
+    <div class="readout" id="ohlc-readout" aria-live="polite" aria-atomic="true"></div>
     <div class="compare-hint" id="compare-hint" hidden></div>
     <div id="load-state" class="load-state" hidden role="status"></div>
     <div id="navigation-status" class="navigation-status" hidden role="status"></div>
     <svg id="price-chart" tabindex="0" role="img" aria-label="NQ NY AM killzone chart. Use the timeline to inspect candles. Select a candle to measure its wick, or a level label to measure distance."></svg>
+    <div id="lwc-chart" hidden tabindex="0" role="img" aria-label="Interactive NQ candlestick chart with study overlays. Use left and right arrow keys to move replay."></div>
     <div class="chart-hint" id="chart-hint">Click a candle: wick CE · Click a level: distance</div>
   </section>
   <div class="playback" aria-label="Historical playback">
@@ -246,11 +248,14 @@ dialog{border:1px solid #3a4b64;background:var(--panel);color:var(--text);border
     <div class="dialog-actions"><button class="primary" type="submit">Overlay study day</button><button id="clear-comparison" type="button">Clear overlay</button></div>
   </form>
 </dialog>
+<script src="vendor/lightweight-charts.standalone.production.js"></script>
+<script src="chart_scene_adapter.js"></script>
+<script src="lightweight_renderer.js"></script>
 <script>
 'use strict';
 const priceRows=[["2026-09-04T11:00:00Z",29681.5,29686,29664,29664],["2026-09-04T11:01:00Z",29666,29666.25,29660.75,29660.75],["2026-09-04T11:02:00Z",29662.25,29665.5,29661.25,29663.25],["2026-09-04T11:03:00Z",29662.5,29664.5,29655,29655],["2026-09-04T11:04:00Z",29654.5,29660.75,29650.75,29656.75],["2026-09-04T11:05:00Z",29655.5,29663.25,29654,29659.75],["2026-09-04T11:06:00Z",29660.75,29661.75,29654,29657.25],["2026-09-04T11:07:00Z",29658.25,29661.75,29656.5,29659.25],["2026-09-04T11:08:00Z",29659.25,29660,29655,29656.25],["2026-09-04T11:09:00Z",29656.75,29657.25,29651,29653],["2026-09-04T11:10:00Z",29652.25,29655,29651.25,29653.5],["2026-09-04T11:11:00Z",29655,29658.5,29651.5,29653],["2026-09-04T11:12:00Z",29654,29659.5,29654,29658.25],["2026-09-04T11:13:00Z",29659.25,29662.5,29658.25,29660],["2026-09-04T11:14:00Z",29660,29663.25,29659.5,29660],["2026-09-04T11:15:00Z",29660.5,29662.75,29658.75,29662.25],["2026-09-04T11:16:00Z",29662.5,29664,29661,29663],["2026-09-04T11:17:00Z",29663,29663.25,29658,29661.5],["2026-09-04T11:18:00Z",29661.5,29666,29660.25,29663.25],["2026-09-04T11:19:00Z",29663.25,29663.25,29657,29657.75],["2026-09-04T11:20:00Z",29658.25,29662.25,29658.25,29659.25],["2026-09-04T11:21:00Z",29658.75,29660.5,29655.5,29658],["2026-09-04T11:22:00Z",29657.75,29667.5,29657.75,29666.5],["2026-09-04T11:23:00Z",29666.75,29666.75,29661,29661.25],["2026-09-04T11:24:00Z",29661.25,29664.25,29659.25,29663],["2026-09-04T11:25:00Z",29662.25,29669.5,29662,29667.75],["2026-09-04T11:26:00Z",29667.25,29676.75,29667,29675],["2026-09-04T11:27:00Z",29673.75,29675.5,29671,29672.25],["2026-09-04T11:28:00Z",29671,29672,29669.75,29669.75],["2026-09-04T11:29:00Z",29669.25,29671,29661.25,29662.5],["2026-09-04T11:30:00Z",29663.75,29666.75,29661,29662.25],["2026-09-04T11:31:00Z",29663.25,29671.5,29661.75,29669.5],["2026-09-04T11:32:00Z",29668.75,29676,29668.25,29674.75],["2026-09-04T11:33:00Z",29675,29675.25,29668.75,29669.25],["2026-09-04T11:34:00Z",29670,29673,29668.25,29669.25],["2026-09-04T11:35:00Z",29669.25,29672.75,29669,29672.25],["2026-09-04T11:36:00Z",29671.75,29675.5,29671,29672.25],["2026-09-04T11:37:00Z",29672.25,29673,29668.25,29669.5],["2026-09-04T11:38:00Z",29668.25,29676.25,29668.25,29673.5],["2026-09-04T11:39:00Z",29672,29673,29667.75,29670.75],["2026-09-04T11:40:00Z",29669.5,29674,29669.25,29671],["2026-09-04T11:41:00Z",29670.5,29675,29670.5,29671.5],["2026-09-04T11:42:00Z",29672.25,29672.25,29666,29669.75],["2026-09-04T11:43:00Z",29669.75,29670.5,29667.5,29669.5],["2026-09-04T11:44:00Z",29668.5,29672.5,29668.25,29671.25],["2026-09-04T11:45:00Z",29671,29673.5,29666.5,29669],["2026-09-04T11:46:00Z",29669.25,29676,29669.25,29675],["2026-09-04T11:47:00Z",29676,29677.5,29674.5,29677],["2026-09-04T11:48:00Z",29677.5,29678.75,29675,29675.25],["2026-09-04T11:49:00Z",29675.25,29678.5,29675.25,29677.25],["2026-09-04T11:50:00Z",29677.25,29679.25,29676.5,29678.25],["2026-09-04T11:51:00Z",29679.25,29679.75,29676.5,29679.25],["2026-09-04T11:52:00Z",29679.25,29680.25,29676.5,29677],["2026-09-04T11:53:00Z",29676.5,29685.25,29676.25,29683],["2026-09-04T11:54:00Z",29682.75,29683.25,29679,29682],["2026-09-04T11:55:00Z",29681.5,29684,29680.75,29683.25],["2026-09-04T11:56:00Z",29683,29690,29682.75,29685],["2026-09-04T11:57:00Z",29684.75,29685.75,29683.75,29685.5],["2026-09-04T11:58:00Z",29686,29686.25,29682,29683.25],["2026-09-04T11:59:00Z",29682.5,29684.25,29677.25,29683.25],["2026-09-04T12:00:00Z",29682,29686.25,29677,29677],["2026-09-04T12:01:00Z",29676.5,29677.5,29658.5,29659.5],["2026-09-04T12:02:00Z",29660.25,29662.25,29653.75,29662.25],["2026-09-04T12:03:00Z",29662,29666.5,29659.25,29663.5],["2026-09-04T12:04:00Z",29663,29663.5,29654.75,29657],["2026-09-04T12:05:00Z",29655.75,29656.75,29640,29640.5],["2026-09-04T12:06:00Z",29640,29645,29634.75,29635],["2026-09-04T12:07:00Z",29634.75,29645,29627,29643.75],["2026-09-04T12:08:00Z",29644.25,29662.75,29644.25,29660.75],["2026-09-04T12:09:00Z",29660,29665.75,29657.5,29660],["2026-09-04T12:10:00Z",29660.25,29663.25,29643.25,29645],["2026-09-04T12:11:00Z",29644.75,29646,29636.75,29643],["2026-09-04T12:12:00Z",29643.5,29647,29636.25,29640],["2026-09-04T12:13:00Z",29640.75,29644,29639.75,29641.75],["2026-09-04T12:14:00Z",29640.5,29644.5,29637.25,29643.25],["2026-09-04T12:15:00Z",29642.25,29645,29637.75,29639.75],["2026-09-04T12:16:00Z",29640.25,29642.75,29635.75,29637.75],["2026-09-04T12:17:00Z",29637.75,29640,29631.75,29636.5],["2026-09-04T12:18:00Z",29637.5,29643.25,29633.75,29640.5],["2026-09-04T12:19:00Z",29640.5,29657,29638.25,29656.5],["2026-09-04T12:20:00Z",29656.25,29661.5,29655.25,29657.75],["2026-09-04T12:21:00Z",29658,29667,29655.5,29661],["2026-09-04T12:22:00Z",29662.5,29662.5,29654.75,29658.75],["2026-09-04T12:23:00Z",29658.5,29660,29656.5,29658.25],["2026-09-04T12:24:00Z",29657.75,29668,29657.5,29666.5],["2026-09-04T12:25:00Z",29666.75,29674.5,29662.75,29671.5],["2026-09-04T12:26:00Z",29670.75,29675.25,29666.25,29666.25],["2026-09-04T12:27:00Z",29667,29671,29664.75,29671],["2026-09-04T12:28:00Z",29670,29672.75,29665,29672.5],["2026-09-04T12:29:00Z",29672,29694,29662.5,29674.25],["2026-09-04T12:30:00Z",29674.5,29693.75,29550,29564.25],["2026-09-04T12:31:00Z",29563.75,29592,29561.75,29565.75],["2026-09-04T12:32:00Z",29565,29576.75,29538,29547.75],["2026-09-04T12:33:00Z",29547.5,29556,29531.25,29546.25],["2026-09-04T12:34:00Z",29544.75,29562.5,29544.75,29552.5],["2026-09-04T12:35:00Z",29553.75,29573,29552.5,29566.75],["2026-09-04T12:36:00Z",29568.25,29574,29558.25,29560.5],["2026-09-04T12:37:00Z",29560.5,29563.5,29544.75,29555.75],["2026-09-04T12:38:00Z",29554.5,29568,29543.25,29546.75],["2026-09-04T12:39:00Z",29547.25,29563.5,29540,29556.5],["2026-09-04T12:40:00Z",29555.5,29579.25,29555,29576.75],["2026-09-04T12:41:00Z",29577.75,29585,29569.25,29575.25],["2026-09-04T12:42:00Z",29576,29587,29574.25,29578.75],["2026-09-04T12:43:00Z",29578.25,29583,29563.5,29566.25],["2026-09-04T12:44:00Z",29567,29574,29555,29557.75],["2026-09-04T12:45:00Z",29557.25,29557.75,29539,29540.25],["2026-09-04T12:46:00Z",29540,29541.25,29513.25,29515.25],["2026-09-04T12:47:00Z",29516,29517.75,29503.75,29507],["2026-09-04T12:48:00Z",29508.25,29519.5,29502,29515.75],["2026-09-04T12:49:00Z",29515.25,29525,29506.75,29518.25],["2026-09-04T12:50:00Z",29518.5,29538,29515.5,29532.5],["2026-09-04T12:51:00Z",29531.75,29542.5,29524.25,29536.25],["2026-09-04T12:52:00Z",29537.25,29541,29532.25,29533.75],["2026-09-04T12:53:00Z",29534.5,29546.75,29526.25,29546.5],["2026-09-04T12:54:00Z",29545.5,29548.25,29528.25,29530],["2026-09-04T12:55:00Z",29529,29537.25,29527.75,29534.25],["2026-09-04T12:56:00Z",29534.5,29535.25,29518,29532.5],["2026-09-04T12:57:00Z",29531.5,29537.25,29526,29537.25],["2026-09-04T12:58:00Z",29536.5,29550.25,29536.5,29547.25],["2026-09-04T12:59:00Z",29546.25,29547.5,29537.75,29546.5],["2026-09-04T13:00:00Z",29547,29547,29523,29528.75],["2026-09-04T13:01:00Z",29528.25,29536.75,29523.5,29527],["2026-09-04T13:02:00Z",29527.75,29539.5,29523.5,29534.25],["2026-09-04T13:03:00Z",29533.75,29549.25,29531.5,29546.75],["2026-09-04T13:04:00Z",29547.25,29551.75,29536.5,29536.75],["2026-09-04T13:05:00Z",29536.75,29556.75,29536,29553],["2026-09-04T13:06:00Z",29552.25,29555,29532,29542.75],["2026-09-04T13:07:00Z",29544.5,29547,29534,29537.75],["2026-09-04T13:08:00Z",29537,29544.75,29536,29540.75],["2026-09-04T13:09:00Z",29540.75,29545.75,29532.75,29534.5],["2026-09-04T13:10:00Z",29533.75,29538.5,29527.75,29528.75],["2026-09-04T13:11:00Z",29529.75,29535,29528.5,29534],["2026-09-04T13:12:00Z",29532.75,29542.5,29532,29541.5],["2026-09-04T13:13:00Z",29541,29550.5,29541,29544],["2026-09-04T13:14:00Z",29543,29548.25,29538.5,29548.25],["2026-09-04T13:15:00Z",29548.25,29555,29546.75,29550.75],["2026-09-04T13:16:00Z",29551,29564.25,29550,29560.5],["2026-09-04T13:17:00Z",29560.5,29561,29554.5,29555.75],["2026-09-04T13:18:00Z",29555.75,29562,29553,29559],["2026-09-04T13:19:00Z",29560.5,29564.5,29557,29564],["2026-09-04T13:20:00Z",29563.5,29571.75,29561.25,29571.25],["2026-09-04T13:21:00Z",29571.25,29577.25,29569.25,29577],["2026-09-04T13:22:00Z",29577.25,29579.5,29569.75,29571.5],["2026-09-04T13:23:00Z",29571.75,29579.75,29569,29578.5],["2026-09-04T13:24:00Z",29578.75,29587.5,29576,29583.75],["2026-09-04T13:25:00Z",29582.75,29588,29578,29583.25],["2026-09-04T13:26:00Z",29583.75,29584.5,29577.25,29579.25],["2026-09-04T13:27:00Z",29579.25,29590.25,29576.5,29580.25],["2026-09-04T13:28:00Z",29580.5,29585.75,29572.5,29575.25],["2026-09-04T13:29:00Z",29575,29591,29574,29588],["2026-09-04T13:30:00Z",29588.75,29596.25,29557,29566],["2026-09-04T13:31:00Z",29565.75,29611.25,29554.5,29607.25],["2026-09-04T13:32:00Z",29607.25,29625.5,29590,29622.5],["2026-09-04T13:33:00Z",29623,29625,29599,29614.75],["2026-09-04T13:34:00Z",29614.25,29635,29612.5,29634],["2026-09-04T13:35:00Z",29634,29637,29617.75,29633.75],["2026-09-04T13:36:00Z",29633.25,29644.5,29611.25,29616.5],["2026-09-04T13:37:00Z",29616.75,29642.25,29615.5,29637.25],["2026-09-04T13:38:00Z",29638.25,29640.25,29622.75,29634.5],["2026-09-04T13:39:00Z",29634.75,29634.75,29612.75,29628.75],["2026-09-04T13:40:00Z",29628.5,29641,29613.25,29620],["2026-09-04T13:41:00Z",29619.5,29629.25,29602,29614.25],["2026-09-04T13:42:00Z",29614.25,29629.75,29607.25,29613.25],["2026-09-04T13:43:00Z",29614.25,29643,29612.25,29642.75],["2026-09-04T13:44:00Z",29643,29647,29597.75,29616.5],["2026-09-04T13:45:00Z",29616.25,29619.25,29577.5,29593.5],["2026-09-04T13:46:00Z",29592.75,29623,29589.25,29622],["2026-09-04T13:47:00Z",29621.75,29633,29616.25,29628.25],["2026-09-04T13:48:00Z",29627.5,29649,29626.75,29634.5],["2026-09-04T13:49:00Z",29633.5,29638.75,29624.25,29634],["2026-09-04T13:50:00Z",29634.5,29643.25,29623,29642.5],["2026-09-04T13:51:00Z",29642.5,29642.5,29617.25,29625.25],["2026-09-04T13:52:00Z",29625.5,29634.5,29609.75,29634.25],["2026-09-04T13:53:00Z",29634,29654.25,29627.75,29649.5],["2026-09-04T13:54:00Z",29650.5,29664.75,29649.5,29660],["2026-09-04T13:55:00Z",29660.25,29676,29652.25,29675.75],["2026-09-04T13:56:00Z",29675.75,29686,29673,29678.75],["2026-09-04T13:57:00Z",29678.5,29687.25,29678,29685.5],["2026-09-04T13:58:00Z",29685.5,29691.75,29682,29688.75],["2026-09-04T13:59:00Z",29688,29691.25,29675.5,29691]];
 const $=id=>document.getElementById(id);
-const svg=$('price-chart'), stage=document.querySelector('.chart-stage');
+const svg=$('price-chart'), lwcContainer=$('lwc-chart'), stage=document.querySelector('.chart-stage');
 const colors={gold:'#e6b668',violet:'#aa9aff',mint:'#62d4b4',rose:'#f18491',compare:'#9eafff',muted:'#91a2b8',white:'#e1eaf4'};
 const fallback={
  date:'2026-09-04',session:'nyam',label:'NY AM',window:'07:00–10:00',
@@ -263,11 +268,12 @@ const fallback={
  rthSlot:150,macros:[[50,70],[110,130],[170,180]]
 };
 let dataset=fallback,bars=dataset.bars,london=null,fvg=null,refs=[],comparison=null;
-let state={cursor:35,selected:null,hover:null,focus:'lh',london:true,rth:false,fvg:true,wick:false,timing:false,wickSide:'lower',manualLine:null,manualZone:null,manualLabel:'Reviewed PD array'};
+const requestedRenderer=new URLSearchParams(location.search).get('renderer');
+let state={cursor:35,selected:null,hover:null,focus:'lh',london:true,rth:false,fvg:true,wick:false,timing:false,wickSide:'lower',manualLine:null,manualZone:null,manualLabel:'Reviewed PD array',renderer:requestedRenderer==='svg'?'svg':'lightweight'};
 const drawingsBySession=new Map();
 let historyMeta=null,requestNumber=0,requestController=null,loading=false,jumpIndices=[];
 let comparisonRequestNumber=0,comparisonRequestController=null;
-let playTimer=null,geometry=null;
+let playTimer=null,geometry=null,rendererFallbackMessage='';
 const tick=n=>Math.round((n+Number.EPSILON)*4)/4;
 const fmt=n=>tick(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 const time=t=>new Intl.DateTimeFormat('en-GB',{timeZone:'America/New_York',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(new Date(t));
@@ -288,8 +294,35 @@ function readout(index){
  if(!b){$('ohlc-readout').textContent=dataset.label+' · '+dataset.date+' · ET';return;}
  $('ohlc-readout').innerHTML='<span class="bar-time">'+time(b.t)+'</span><span class="open-value">O <b>'+fmt(b.o)+'</b></span><span>H <b>'+fmt(b.h)+'</b></span><span>L <b>'+fmt(b.l)+'</b></span><span>C <b style="color:'+(b.c>=b.o?colors.mint:colors.rose)+'">'+fmt(b.c)+'</b></span>';
 }
+function syncFocusOptions(){
+ const options=refs.filter(ref=>state[ref.group]).map(ref=>({id:ref.id,label:'Measure · '+ref.name}));
+ if(state.manualLine!=null)options.push({id:'manual',label:'Measure · '+state.manualLabel.slice(0,20)});
+ if(!options.some(option=>option.id===state.focus))state.focus=options[0]?.id||null;
+ $('focus-level').innerHTML=options.map(option=>'<option value="'+escapeText(option.id)+'">'+escapeText(option.label)+'</option>').join('');
+ $('focus-level').value=state.focus||'';$('focus-level').hidden=!options.length;
+}
 function drawChart(){
  const W=Math.max(300,stage.clientWidth),H=Math.max(280,stage.clientHeight),small=W<650;
+ syncFocusOptions();
+ if(state.renderer==='lightweight'){
+  try{
+   svg.hidden=true;svg.style.display='none';lwcContainer.hidden=false;lwcContainer.style.display='block';
+   const scene=ICTChartScene.fromSession({dataset,state,refs,london,fvg,comparison});
+   ICTLwcRenderer.render(lwcContainer,scene,{
+    onHover:index=>{state.hover=index;readout(index==null?state.cursor:index);},
+    onSelect:index=>{state.selected=index;state.wick=true;drawChart();}
+   });
+   readout(state.hover!=null&&state.hover<=state.cursor?state.hover:state.cursor);updatePlayback();
+   const focus=refs.find(ref=>ref.id===state.focus&&state[ref.group])||(state.focus==='manual'&&state.manualLine!=null?{name:state.manualLabel,value:state.manualLine}:null),current=bars[state.cursor],previous=bars[state.cursor-1];
+   const distance=focus&&current?movement(current.c,previous&&current.slot===previous.slot+1?previous.c:null,focus.value)+' '+focus.name+' · '+(current.c-focus.value>0?'+':'')+fmt(current.c-focus.value)+' pts · ':'';
+   $('chart-hint').textContent=state.wick&&state.selected!=null?time(bars[state.selected].t)+' · '+state.wickSide+' wick selected':distance+'scroll to zoom · drag to pan';
+   for(const key of ['london','rth','fvg','wick','timing'])$('show-'+key).setAttribute('aria-pressed',state[key]);
+   return;
+  }catch(error){
+   state.renderer='svg';$('chart-renderer').value='svg';rendererFallbackMessage='Interactive renderer failed; preserved SVG restored. '+error.message;navigationMessage(rendererFallbackMessage);
+  }
+ }
+ svg.hidden=false;svg.style.display='block';lwcContainer.hidden=true;lwcContainer.style.display='none';
  svg.setAttribute('viewBox','0 0 '+W+' '+H);
  const m={l:small?10:18,r:small?110:156,t:64,b:42},right=W-m.r,bottom=H-m.b,pw=right-m.l,ph=bottom-m.t;
  if(!bars.length){
@@ -323,25 +356,25 @@ function drawChart(){
   out+=line(edge(slot+.5),bottom-12,edge(slot+.5),bottom-4,colors.rose,{'stroke-width':2});
  }
  if(state.london&&london){
-  out+=rect(m.l,y(london.high),pw,y(london.eq)-y(london.high),'#e6b668',{'fill-opacity':.055});
-  out+=rect(m.l,y(london.eq),pw,y(london.low)-y(london.eq),'#62d4b4',{'fill-opacity':.045});
+  out+=rect(m.l,y(london.high),pw,y(london.eq)-y(london.high),'#e6b668',{'fill-opacity':.055,'data-overlay':'prior-premium'});
+  out+=rect(m.l,y(london.eq),pw,y(london.low)-y(london.eq),'#62d4b4',{'fill-opacity':.045,'data-overlay':'prior-discount'});
   out+=text(m.l+8,y(london.high)+18,'PREMIUM · '+london.label.toUpperCase(),'#bda579',9,{'letter-spacing':.6});
   out+=text(m.l+8,y(london.low)-10,'DISCOUNT · '+london.label.toUpperCase(),'#789e94',9,{'letter-spacing':.6});
  }
  if(state.timing){
   dataset.macros.forEach(([start,finish])=>{
-   out+=rect(edge(start),m.t,edge(finish)-edge(start),ph,colors.mint,{'fill-opacity':.055});
+   out+=rect(edge(start),m.t,edge(finish)-edge(start),ph,colors.mint,{'fill-opacity':.055,'data-overlay':'macro'});
    out+=line(edge(start),m.t,edge(start),bottom,colors.mint,{'stroke-opacity':.35,'stroke-dasharray':'2 5'});
    out+=text((edge(start)+edge(finish))/2,bottom-10,'MACRO',colors.mint,8,{'text-anchor':'middle'});
   });
  }
  if(dataset.rthSlot!=null){
-  out+=line(edge(dataset.rthSlot),m.t,edge(dataset.rthSlot),bottom,colors.mint,{'stroke-opacity':.5,'stroke-dasharray':'4 5'});
+  out+=line(edge(dataset.rthSlot),m.t,edge(dataset.rthSlot),bottom,colors.mint,{'stroke-opacity':.5,'stroke-dasharray':'4 5','data-overlay':'rth-open'});
   out+=text(edge(dataset.rthSlot)+(dataset.rthSlot===0?5:-5),m.t+12,'09:30 RTH',colors.mint,9,{'text-anchor':dataset.rthSlot===0?'start':'end'});
  }
  const sourceBoundarySlot=dataset.sourceBoundaryUTC?(new Date(dataset.sourceBoundaryUTC)-new Date(dataset.startUTC))/(dataset.timeframe*60000):null;
  if(Number.isFinite(sourceBoundarySlot)&&sourceBoundarySlot>0&&sourceBoundarySlot<dataset.slots){
-  out+=line(edge(sourceBoundarySlot),m.t,edge(sourceBoundarySlot),bottom,colors.gold,{'stroke-opacity':.7,'stroke-dasharray':'3 4'});
+  out+=line(edge(sourceBoundarySlot),m.t,edge(sourceBoundarySlot),bottom,colors.gold,{'stroke-opacity':.7,'stroke-dasharray':'3 4','data-overlay':'source-boundary'});
   out+=text(edge(sourceBoundarySlot)+5,m.t+27,'Yahoo continuation begins',colors.gold,9);
  }
  if(comparison&&comparison.bars?.length){
@@ -536,12 +569,12 @@ function configureDataset(data,remember=true){
  if(saved)Object.assign(state,saved);
  ['user-label','user-pd-level','user-fvg-high','user-fvg-low'].forEach((id,i)=>$(id).value=saved?.inputs?.[i]||'');
  $('wick-side').value=state.wickSide;
+ $('chart-renderer').value=state.renderer;
  $('trade-date').value=data.date;$('trading-session').value=data.session;$('chart-timeframe').value=String(data.timeframe);
  $('trade-date').title=data.session==='asia'?'Asia starts at 20:00 on the calendar evening before this trading date.':'Trading date in America/New_York.';
  $('prior-range-label').textContent=london?london.label+(isPartial(london)?'*':'')+' range':'Prior range';
  $('show-london').title=london?'Trade date '+london.date+' · '+london.window+' ET'+(london.id==='asia'?' (starts the prior evening)':'')+' · '+london.sourceMinutes+'/'+london.expectedMinutes+' source minutes':'No prior range found in the preceding 14 days';
  $('show-london').disabled=!london;$('show-rth').disabled=!data.priorRTH;
- $('show-fvg').title=fvg?'Example candidate forms at '+closeTime(fvg.formedIndex)+' ET':'No complete three-candle gap found after the example anchor';
  $('show-fvg').disabled=!fvg;
  $('show-wick').disabled=!bars.length;
  for(const key of ['london','rth','fvg','wick','timing'])$('show-'+key).setAttribute('aria-pressed',state[key]);
@@ -555,12 +588,13 @@ function configureJumps(){
   const index=bars.findIndex(b=>time(b.t)===hour);
   if(index>=0)options.push({index,label:hour==='09:30'?'09:30 open':'08:30 bar'});
  }
- if(fvg){options.push({index:fvg.formedIndex,label:'FVG formed'});const revisit=bars.findIndex((b,i)=>i>fvg.formedIndex&&b.l<=fvg.high&&b.h>=fvg.low);if(revisit>=0)options.push({index:revisit,label:'FVG revisit'});}
+ if(fvg&&fvg.formedIndex<=state.cursor){options.push({index:fvg.formedIndex,label:'FVG formed'});const revisit=bars.findIndex((b,i)=>i>fvg.formedIndex&&b.l<=fvg.high&&b.h>=fvg.low);if(revisit>=0&&revisit<=state.cursor)options.push({index:revisit,label:'FVG revisit'});}
  jumpIndices=[...new Set(options.map(o=>o.index).filter(i=>i>=0))];
  $('jump').innerHTML='<option value="" disabled>Jump to…</option>'+options.filter(o=>o.index>=0).map(o=>'<option value="'+o.index+'">'+o.label+'</option>').join('');
 }
 function updatePlayback(){
  const empty=!bars.length;
+ configureJumps();
  $('replay').max=Math.max(0,bars.length-1);$('replay').value=state.cursor;
  $('replay').disabled=empty||loading;$('play').disabled=empty||loading;$('jump').disabled=empty||loading;
  $('step-back').disabled=empty||loading||state.cursor===0;
@@ -568,6 +602,12 @@ function updatePlayback(){
  $('replay-time').textContent=empty?'—':closeTime(state.cursor)+' ET';
  $('replay').setAttribute('aria-valuetext',empty?'No complete candles':time(bars[state.cursor].t)+' bar, closed '+closeTime(state.cursor)+' ET, close '+fmt(bars[state.cursor].c));
  $('jump').value=jumpIndices.includes(state.cursor)?String(state.cursor):'';
+ updateFvgDisclosure();
+}
+function updateFvgDisclosure(){
+ const available=fvg&&state.cursor>=fvg.formedIndex;
+ $('show-fvg').title=available?'Example candidate formed at '+closeTime(fvg.formedIndex)+' ET':fvg?'No candidate is disclosed before its formation candle closes.':'No complete three-candle gap found after the example anchor';
+ $('active-fvg-detail').textContent=available?'Candidate bounds: '+fmt(fvg.low)+'–'+fmt(fvg.high)+'; available at '+closeTime(fvg.formedIndex)+' ET.':fvg?'No candidate has formed by the current replay cutoff.':'No complete three-candle candidate was found after the example anchor.';
 }
 function updateDateButtons(){
  $('previous-date').disabled=!historyMeta||loading||dataset.date<=historyMeta.minDate;
@@ -579,10 +619,10 @@ function updateDataDetails(){
  $('data-footer').textContent='NQ · '+d.date+' · '+d.timeframeLabel+' · '+coverage+(last?' · close '+closeTime(bars.length-1)+' ET':' · no complete bars')+(isPartial(d)?' · gaps':'')+(comparison?' · cmp '+comparison.date:'');
  $('data-footer').title='Read-only NQ SQLite · '+d.startUTC+' to '+d.endUTC+' · '+bars.length+' '+d.timeframeLabel+' candles · '+sourceSummary(d);
  $('active-session-title').textContent=d.label+' · '+d.date+' · '+d.window+' ET';
- $('active-data-detail').textContent=d.timeframeLabel+' chart from '+coverage+' observed; '+bars.length+'/'+d.expectedBars+' complete '+d.timeframeLabel+' candles. Source window '+d.startUTC+' to '+d.endUTC+'. Latest one-minute source open: '+(d.lastUTC||'none')+'. Sources: '+sourceSummary(d)+'. '+(d.session==='asia'?'Asia begins on the prior calendar evening.':'')+(comparison?' Comparison overlay: '+comparisonSummary(comparison)+'.':'');
+ $('active-data-detail').textContent=d.timeframeLabel+' chart from '+coverage+' observed; '+bars.length+'/'+d.expectedBars+' complete '+d.timeframeLabel+' candles. Source window '+d.startUTC+' to '+d.endUTC+'. Latest observed one-minute bar timestamp: '+(d.lastUTC||'none')+'. Sources: '+sourceSummary(d)+'. '+(d.session==='asia'?'Asia begins on the prior calendar evening.':'')+(comparison?' Comparison overlay: '+comparisonSummary(comparison)+'.':'');
  $('active-prior-detail').textContent=d.previous?'Prior comparator: '+d.previous.label+' · trade date '+d.previous.date+' · '+d.previous.window+' ET'+(d.previous.id==='asia'?' (starts the prior evening)':'')+'. '+d.previous.sourceMinutes+'/'+d.previous.expectedMinutes+' minutes; H '+fmt(d.previous.high)+', L '+fmt(d.previous.low)+', EQ '+fmt(d.previous.eq)+'. '+(isPartial(d.previous)?'Incomplete observed range, marked * on chart.':''):'No prior comparator with observations was found in the preceding 14 days.';
  if(d.priorRTH)$('active-prior-detail').textContent+=' Prior RTH: '+d.priorRTH.date+', '+d.priorRTH.sourceMinutes+'/'+d.priorRTH.expectedMinutes+' minutes.';
- $('active-fvg-detail').textContent=fvg?'Candidate bounds: '+fmt(fvg.low)+'–'+fmt(fvg.high)+'; available at '+closeTime(fvg.formedIndex)+' ET.':'No complete three-candle candidate was found after the example anchor.';
+ updateFvgDisclosure();
  if(historyMeta)$('history-range').textContent='Available source history: '+historyMeta.firstUTC+' to '+historyMeta.lastUTC+'. Date/session availability can vary within that range.';
 }
 function navigationMessage(message){
@@ -638,12 +678,18 @@ async function initializeNavigation(){
   historyMeta=null;
   $('trade-date').min=fallback.date;$('trade-date').max=fallback.date;
   $('trade-date').disabled=true;$('trading-session').disabled=true;$('compare-day').disabled=true;
-  navigationMessage('Saved demo only · date navigation needs the local history server.');
+  navigationMessage(rendererFallbackMessage||'Saved demo only · date navigation needs the local history server.');
  }finally{clearTimeout(timeout);}
 }
 $('trade-date').addEventListener('change',event=>loadSession(event.target.value,$('trading-session').value));
 $('trading-session').addEventListener('change',event=>loadSession($('trade-date').value,event.target.value));
 $('chart-timeframe').addEventListener('change',event=>loadSession($('trade-date').value,$('trading-session').value,'',Number(event.target.value)));
+$('chart-renderer').addEventListener('change',event=>{
+ pause();state.renderer=event.target.value==='lightweight'?'lightweight':'svg';
+ const url=new URL(location.href);if(state.renderer==='svg')url.searchParams.set('renderer','svg');else url.searchParams.delete('renderer');history.replaceState(null,'',url);
+ rendererFallbackMessage='';navigationMessage('');drawChart();
+});
+$('focus-level').addEventListener('change',event=>{state.focus=event.target.value;drawChart();});
 $('previous-date').addEventListener('click',()=>loadSession(dataset.date,$('trading-session').value,'prev'));
 $('next-date').addEventListener('click',()=>loadSession(dataset.date,$('trading-session').value,'next'));
 $('latest-date').addEventListener('click',()=>loadSession(dataset.date,$('trading-session').value,'latest'));
@@ -675,6 +721,7 @@ svg.addEventListener('click',event=>{
 svg.addEventListener('pointermove',event=>{const hit=event.target.closest('.candle-hit');if(hit){state.hover=Number(hit.dataset.index);readout(state.hover);}});
 svg.addEventListener('pointerleave',()=>{state.hover=null;readout(state.cursor);});
 svg.addEventListener('keydown',event=>{if(event.key==='ArrowLeft'||event.key==='ArrowRight'){event.preventDefault();pause();setCursor(state.cursor+(event.key==='ArrowLeft'?-1:1));}});
+lwcContainer.addEventListener('keydown',event=>{if(event.key==='ArrowLeft'||event.key==='ArrowRight'){event.preventDefault();pause();setCursor(state.cursor+(event.key==='ArrowLeft'?-1:1));}});
 $('replay').addEventListener('input',event=>{pause();setCursor(event.target.value);});
 $('step-back').addEventListener('click',()=>{pause();setCursor(state.cursor-1);});
 $('step-forward').addEventListener('click',()=>{pause();setCursor(state.cursor+1);});
@@ -710,6 +757,11 @@ let saveTimer;
 notes.addEventListener('input',()=>{clearTimeout(saveTimer);saveTimer=setTimeout(()=>{try{localStorage.setItem(notesKey,notes.value);saveStatus.textContent='Draft saved in this browser.';}catch{saveStatus.textContent='Download to keep these notes.';}},250);});
 $('download-notes').addEventListener('click',()=>{const url=URL.createObjectURL(new Blob(['# ICT observation notes\n\n'+notes.value+'\n'],{type:'text/markdown'}));const a=document.createElement('a');a.href=url;a.download='ict-observation-notes.md';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
 document.querySelectorAll('.flashcard button').forEach(button=>button.addEventListener('click',()=>button.closest('.flashcard').classList.toggle('revealed')));
+window.ictChartApp=Object.freeze({
+ getAudit:()=>({renderer:state.renderer,date:dataset.date,session:dataset.session,timeframe:dataset.timeframe,cursor:state.cursor,totalBars:bars.length,visibleBars:Math.min(bars.length,state.cursor+1),cutoffISO:bars[state.cursor]?.t||null,scene:ICTChartScene.fromSession({dataset,state,refs,london,fvg,comparison})}),
+ setRenderer:value=>{state.renderer=value==='lightweight'?'lightweight':'svg';$('chart-renderer').value=state.renderer;drawChart();},
+ setCursor:index=>{pause();setCursor(index);}
+});
 configureDataset(fallback,false);
 new ResizeObserver(drawChart).observe(stage);
 initializeNavigation();

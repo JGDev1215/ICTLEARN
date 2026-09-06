@@ -18,6 +18,11 @@ Date/session/timeframe choices are included in the URL. The chart defaults to
 one-minute OHLC candles; the optional five-minute view is aggregated from the
 same one-minute rows. Candles, range references, price scale, playback and the
 candidate illustration refresh together.
+The Renderer control defaults to the Lightweight Charts view with candlesticks,
+crosshair, zoom and pan. The preserved SVG chart is selected by `?renderer=svg`
+and remains the automatic rollback path. The interactive view uses a vendored
+5.2.0 standalone build and makes no CDN request. If it cannot initialize, the
+page restores the SVG renderer and shows the reason.
 Use Compare day to overlay a second date/session as a dashed close path
 normalized to that study day's opening price. This is a visual pattern-review
 aid rather than a price-level signal; the selected comparison is also stored
@@ -50,8 +55,14 @@ source details are available under Data & sources.
 Opening the HTML directly or using a generic static server shows the saved
 2026-09-04 NY AM example only, with date navigation explicitly unavailable.
 
-Focused checks:
+The server and its Python tests belong to the parent Journal workspace; they are
+not duplicated in this public static repository. From the Journal root, run:
 
 ```sh
 python3 -m unittest discover -s prototype -p test_ict_chart_server.py -v
 ```
+
+From the `ICTLEARN` repository, run the renderer checks with `npm test`. With
+the Journal server running on port 8768, add
+`ICT_API_BASE=http://127.0.0.1:8768 npm run test:api` to exercise its real
+1-minute and 5-minute responses through the chart-scene adapter.
