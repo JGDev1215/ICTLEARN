@@ -100,6 +100,9 @@ def export(args):
         "sourceSnapshot": {
             "instrument": "NQ",
             "canonicalTimeframeMinutes": 1,
+            "authority": "Canonical Journal NQ SQLite database opened read-only",
+            "databaseContract": "NQ_DATABASE_INSTRUCTIONS.md",
+            "generatedBy": "tools/export_static_sessions.py",
             "firstSourceUTC": source_meta["firstUTC"],
             "lastSourceUTC": source_meta["lastUTC"],
             "publishedStartDate": published_dates[0],

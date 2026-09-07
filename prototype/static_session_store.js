@@ -20,7 +20,7 @@
       this.catalogURL = catalogURL;
       this.fetcher = (...arguments_) => fetcher(...arguments_);
       this.dayCache = new Map();
-      this.meta = {...catalog.meta, static: true, publicationScope: catalog.publicationScope};
+      this.meta = {...catalog.meta, static: true, publicationScope: catalog.publicationScope, sourceSnapshot: catalog.sourceSnapshot};
     }
 
     dates(session, timeframe) {

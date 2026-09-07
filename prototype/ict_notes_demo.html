@@ -612,7 +612,7 @@ function updateDateButtons(){
 }
 function updateDataDetails(){
  const d=dataset,last=bars.at(-1),coverage=d.sourceMinutes+'/'+d.expectedMinutes+' 1m source rows';
- const modeLabel=dataMode==='static'?'Published snapshot':dataMode==='api'?'Local read-only API':'Embedded example';
+ const modeLabel=dataMode==='static'?'NQ database snapshot':dataMode==='api'?'NQ read-only database':'Embedded example';
  $('data-footer').textContent=modeLabel+' · NQ · '+d.date+' · '+d.timeframeLabel+' · '+coverage+(last?' · close '+closeTime(bars.length-1)+' ET':' · no complete bars')+(isPartial(d)?' · gaps':'')+(comparison?' · cmp '+comparison.date:'');
  $('data-footer').title=modeLabel+' · '+d.startUTC+' to '+d.endUTC+' · '+bars.length+' '+d.timeframeLabel+' candles · '+sourceSummary(d);
  $('active-session-title').textContent=d.label+' · '+d.date+' · '+d.window+' ET';
@@ -620,7 +620,7 @@ function updateDataDetails(){
  $('active-prior-detail').textContent=d.previous?'Prior comparator: '+d.previous.label+' · trade date '+d.previous.date+' · '+d.previous.window+' ET'+(d.previous.id==='asia'?' (starts the prior evening)':'')+'. '+d.previous.sourceMinutes+'/'+d.previous.expectedMinutes+' minutes; H '+fmt(d.previous.high)+', L '+fmt(d.previous.low)+', EQ '+fmt(d.previous.eq)+'. '+(isPartial(d.previous)?'Incomplete observed range, marked * on chart.':''):'No prior comparator with observations was found in the preceding 14 days.';
  if(d.priorRTH)$('active-prior-detail').textContent+=' Prior RTH: '+d.priorRTH.date+', '+d.priorRTH.sourceMinutes+'/'+d.priorRTH.expectedMinutes+' minutes.';
  updateFvgDisclosure();
- if(historyMeta)$('history-range').textContent=historyMeta.static?'Published study-day window: '+historyMeta.minDate+' to '+historyMeta.maxDate+'. The full canonical source history remains available only through the local read-only API.':'Available source history: '+historyMeta.firstUTC+' to '+historyMeta.lastUTC+'. Date/session availability can vary within that range.';
+ if(historyMeta)$('history-range').textContent=historyMeta.static?'Published NQ database study-day window: '+historyMeta.minDate+' to '+historyMeta.maxDate+'. These files are deterministic exports from the canonical read-only database; full source history remains available through the local database API.':'Canonical NQ database history: '+historyMeta.firstUTC+' to '+historyMeta.lastUTC+'. Date/session availability can vary within that range.';
 }
 function navigationMessage(message){
  $('navigation-status').textContent=message;$('navigation-status').hidden=!message;

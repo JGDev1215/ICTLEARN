@@ -154,6 +154,12 @@ invalid dates must resolve to a valid date or produce a visible error.
 Charts MUST preserve the data contract of their project. For Journal NQ data,
 `NQ_DATABASE_INSTRUCTIONS.md` remains authoritative.
 
+Every NQ historical price chart MUST obtain OHLC from the canonical Journal NQ
+SQLite database or from a deterministic, checksummed export produced from that
+database. Embedded sample data may be used only as a clearly labelled failure
+fallback. A web feed or third-party chart response MUST NOT silently replace
+the canonical NQ historical series.
+
 - Open canonical SQLite market data in read-only/query-only mode.
 - Do not interpolate, forward-fill, or synthesize missing OHLC bars.
 - Keep missing time slots visible as gaps.

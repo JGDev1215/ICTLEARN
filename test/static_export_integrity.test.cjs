@@ -15,6 +15,9 @@ test('published study-day files match the catalog hashes and chart contract', ()
   assert.equal(catalog.schemaVersion, 1);
   assert.equal(catalog.sourceSnapshot.publishedStartDate, '2026-08-17');
   assert.equal(catalog.sourceSnapshot.publishedEndDate, '2026-09-04');
+  assert.equal(catalog.sourceSnapshot.authority, 'Canonical Journal NQ SQLite database opened read-only');
+  assert.equal(catalog.sourceSnapshot.databaseContract, 'NQ_DATABASE_INSTRUCTIONS.md');
+  assert.equal(catalog.sourceSnapshot.generatedBy, 'tools/export_static_sessions.py');
   assert.equal(Object.keys(catalog.days).length, 15);
   assert.equal(JSON.stringify(catalog).includes('/Users/'), false, 'catalog contains no workstation path');
 
@@ -37,4 +40,3 @@ test('published study-day files match the catalog hashes and chart contract', ()
   }
   assert.deepEqual(observed, catalog.available);
 });
-

@@ -51,7 +51,7 @@ test('static page preserves SVG rollback and renders the default interactive rep
   assert.equal(await page.locator('#trade-date').isEnabled(), true);
   assert.equal(await page.locator('#trading-session').isEnabled(), true);
   assert.equal(await page.locator('#compare-day').isEnabled(), true);
-  assert.match(await page.locator('#data-footer').textContent(), /Published snapshot/);
+  assert.match(await page.locator('#data-footer').textContent(), /NQ database snapshot/);
   await page.click('#previous-date');
   await page.waitForFunction(() => window.ictChartApp.getAudit().date === '2026-09-03');
   await page.click('#next-date');

@@ -14,16 +14,18 @@ projects in the parent Journal workspace.
 The GitHub Pages entry point is `index.html`, which opens
 `prototype/ict_notes_demo.html`.
 
-The hosted page includes bounded, precomputed study snapshots for 15 trading
-days from 2026-08-17 through 2026-09-04. The calendar, Previous, Next and Latest
-controls work across those published dates for all six sessions at 1-minute and
-5-minute resolution. Compare day uses the same published window. Playback,
-manual drawings, notes and chart layers continue to work without a server.
+The hosted page includes bounded, precomputed NQ database snapshots for 15
+trading days from 2026-08-17 through 2026-09-04. The calendar, Previous, Next
+and Latest controls work across those published dates for all six sessions at
+1-minute and 5-minute resolution. Compare day uses the same published window.
+Playback, manual drawings, notes and chart layers continue to work without a
+server.
 
 GitHub Pages cannot run the project's Python chart server or access the local
-SQLite market database. The published JSON files are educational snapshots,
-not the canonical archive. Full date navigation across the local 2010-2026 NQ
-history remains available through the read-only server described in
+SQLite market database. The published JSON files are deterministic,
+checksummed exports from the canonical NQ database; they are not the canonical
+archive. Full date navigation across the local 2010-2026 NQ history remains
+available through the read-only server described in
 `prototype/ICT_CHART_README.md`.
 
 The page now defaults to the interactive candlestick renderer with crosshair,
@@ -44,8 +46,9 @@ Then open:
 
 <http://127.0.0.1:8768/prototype/ict_notes_demo.html>
 
-The local server reads the NQ database in SQLite read-only mode and aggregates
-the optional 5-minute view from the 1-minute rows.
+The local server uses the canonical NQ database as its sole historical-price
+authority, opens it in SQLite read-only mode, and aggregates the optional
+5-minute view from the 1-minute rows.
 
 To rebuild the bounded GitHub Pages snapshots from the canonical read-only
 database, run from this repository:
