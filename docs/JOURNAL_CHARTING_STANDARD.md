@@ -253,7 +253,126 @@ title, timeframe, date, and provenance.
   server, embed a bounded fallback, or state that navigation is unavailable.
 - Escape all user-provided labels before placing them into SVG or HTML.
 
-## 12. Required validation
+## 12. Technology and repository policy
+
+JCS-1 separates approved implementation dependencies, reference-only material,
+optional analytical tools, and excluded dependencies. A repository link is not
+an endorsement of its market concepts, detector definitions, signals, or data
+rights. Before adding or upgrading a dependency, re-check its primary
+repository documentation, exact version, license, notices, and suitability for
+the requested chart boundary. Retain the applicable license and notices with
+any vendored or copied code.
+
+### 12.1 Approved implementation dependencies
+
+- [TradingView Lightweight Charts](https://github.com/tradingview/lightweight-charts)
+  is the approved primary browser chart engine. Its repository describes it as
+  an interactive financial HTML5 chart library with a standalone build and
+  custom-plugin support. It is Apache-2.0, and its repository requires
+  TradingView attribution and a link as described in its
+  [README](https://github.com/tradingview/lightweight-charts#license) and
+  [NOTICE](https://github.com/tradingview/lightweight-charts/blob/master/NOTICE).
+  Pin the exact version, vendor the published build for Journal charts, retain
+  its license and integrity hash, and satisfy the attribution requirement. The
+  current ICTLEARN implementation vendors Lightweight Charts 5.2.0 and uses
+  the `attributionLogo` chart option.
+- [Databento Python](https://github.com/databento/databento-python) is an
+  approved ingestion and validation client when Databento access is used. Its
+  primary documentation describes historical/live access, OHLCV and
+  normalized schemas, futures symbology, point-in-time definitions, replay,
+  batch download, and Pandas/NumPy/CSV/JSON conversion. It is Apache-2.0.
+  Keep API credentials in environment variables such as
+  `DATABENTO_API_KEY`; never commit them. Using this client MUST NOT relax the
+  Journal read-only database contract or establish rights to redistribute
+  downloaded market data.
+- [yfinance](https://github.com/ranaroussi/yfinance) is permitted only for the
+  mutable Yahoo continuation or reconciliation path already defined by the
+  project. Its code is Apache-2.0, but its own documentation directs users to
+  Yahoo's terms for rights to the downloaded data and warns that the API is
+  intended for personal use. Code licensing does not grant unrestricted rights
+  to publish Yahoo data. Preserve the fixed Databento/mutable Yahoo source
+  boundary and the project's publication limits.
+
+Approved dependencies remain subject to the data-source, provenance, replay,
+and validation rules in this standard and in `NQ_DATABASE_INSTRUCTIONS.md`.
+
+### 12.2 Reference-only sources
+
+- [Pine Script Indicator Suite](https://github.com/jbondata/pinescript-indicator-suite)
+  is a reference-only source for visual patterns and learning examples. Its
+  repository identifies the project as educational/visualization material and
+  declares Mozilla Public License 2.0. Port only explicitly reviewed visual
+  behavior, such as FVG boxes, session boundaries, true opens, macros, or
+  liquidity-swing illustrations. Do not import its signals, probability
+  assumptions, confluence scoring, or definitions as authoritative ICT truth.
+  If code is copied or modified, preserve the MPL-2.0 obligations.
+- [ICT Trading Research](https://github.com/brodenbeck1/ict_trading) may provide
+  architecture inspiration for separating concepts, detectors, tests, models,
+  and chart outputs. Do not copy code or add it as a dependency until its
+  current license and suitability have been explicitly verified.
+
+Reference material cannot override the Journal report contract, the NQ data
+contract, or a project's named and tested detector definitions.
+
+### 12.3 Optional analytical tools
+
+- [DuckDB](https://github.com/duckdb/duckdb) is an optional MIT-licensed batch
+  analysis tool for analytical SQL and direct CSV/Parquet queries. It may
+  generate catalogs, research features, or deterministic export inputs, but it
+  MUST NOT become the browser chart's source of trading interpretation.
+- [Polars](https://github.com/pola-rs/polars) is an optional MIT-licensed batch
+  analysis tool for lazy, parallel, or streaming feature extraction. Use it for
+  deterministic preprocessing and validation, not browser-side concept
+  inference.
+- [Smart Money Concepts](https://github.com/gabrielkoerich/smart-money-concepts)
+  may be evaluated as an optional detector sandbox only after its current
+  license and suitability have been reviewed. Its repository currently shows
+  MIT, but that does not validate its ICT definitions or make its outputs
+  authoritative. Any port must have a named rule, availability time, source
+  boundary, and focused tests before it can appear as detector output.
+
+### 12.4 Excluded dependencies and repositories requiring caution
+
+- [backtesting.py](https://github.com/kernc/backtesting.py) is separate from
+  the chart layer. Its repository declares AGPL-3.0; any future research use
+  must be isolated and its license obligations reviewed before distribution.
+- [CCXT](https://github.com/ccxt/ccxt) is excluded from the NQ/Databento chart
+  stack. Its primary domain is a unified API for crypto exchanges and
+  prediction markets, not the Journal's NQ historical-data workflow.
+- [Castle Trade SMC Indicators](https://github.com/castletrade/pine-script-smc-indicators)
+  is excluded unless its licensing and copying restrictions are reconciled by
+  an explicit review. Its repository displays an MIT marker but also states
+  that the materials are exclusive property and restricts unauthorized copying,
+  distribution, and use. Do not copy its code or definitions while that
+  conflict remains.
+- All-in-one ICT or SMC strategy repositories that combine display,
+  interpretation, and trade signals are excluded from the core chart stack
+  unless their boundaries can be separated, tested, and licensed. A strategy
+  repository is not evidence that a detector or trading concept is valid.
+
+### 12.5 Current implementation sequence and status
+
+The following sequence records implementation status without treating pending
+research as completed capability:
+
+| Sequence item | Status | Current boundary |
+|---|---|---|
+| Lightweight Charts migration | **Complete** | Lightweight Charts 5.2.0 is vendored and primary; the SVG renderer remains the fallback. |
+| Read-only Python API and Databento/Yahoo provenance | **Complete** | The local API reads the NQ SQLite source read-only, labels the fixed Databento and mutable Yahoo segments, and does not write market data. |
+| Structured versioned scene response | **Complete** | `ictlearn.chart-scene` version 1 is the presentation-neutral adapter boundary shared by the renderers. |
+| Session, macro, FVG, prior-range, wick, comparison, and replay visuals | **Partly/mostly complete** | Session navigation, macro windows, prior-session/prior-RTH references, one mechanical three-candle FVG candidate, wick midpoint interaction, manual drawings, normalized comparison, and replay are present. True-open and higher-timeframe detector work is not present. |
+| Static per-day GitHub Pages files | **Complete** | The bounded catalog publishes checksummed per-day snapshots for 15 trading days, six sessions, and 1-minute/5-minute views. It is not the full local archive. |
+| Strategy/backtesting separation | **Required and preserved** | The chart remains an educational study surface; no strategy engine, execution system, or performance claim is part of the chart implementation. |
+| True-open detectors | **Pending** | No named, tested true-open detector is currently part of the published chart contract. |
+| Liquidity-swing, daily, weekly, monthly, and higher-timeframe liquidity detectors | **Pending** | These require explicit definitions, inputs, availability times, and tests before display. |
+
+The current chart MUST NOT be described as implementing daily candles, weekly or
+monthly highs/lows, confirmed swing detection, relative equal highs/lows,
+higher-timeframe liquidity, S&P 500 or long-lived-stock coverage, or a
+full-history backtest. Educational prompts, manually entered levels, or
+repository references do not satisfy those requirements.
+
+## 13. Required validation
 
 Before a chart is considered complete, its project MUST test:
 
@@ -275,7 +394,7 @@ Before a chart is considered complete, its project MUST test:
 Tests should fail on malformed input rather than repairing it. Browser smoke
 tests must exercise real interactions, not only inspect source text.
 
-## 13. Adoption checklist
+## 14. Adoption checklist
 
 Use this checklist when creating or materially changing a chart:
 
@@ -290,9 +409,9 @@ Use this checklist when creating or materially changing a chart:
 - [ ] Concept detectors have named rules and availability times.
 - [ ] Source, cutoff, coverage, and publication bounds are visible.
 - [ ] Keyboard, mobile, loading, error, and fallback states pass.
-- [ ] Automated validation in section 12 passes.
+- [ ] Automated validation in section 13 passes.
 
-## 14. Change control
+## 15. Change control
 
 JCS-1 is the default for all descendant projects. A project-specific variation
 must document the reason, preserve the data and replay guarantees, and identify
@@ -302,4 +421,3 @@ Changes to shared semantic colors, renderer architecture, time handling,
 provenance, or validation gates require a new revision of this standard. Visual
 experiments may be developed behind an explicit preview or renderer switch
 while the JCS-1 path remains available.
-
