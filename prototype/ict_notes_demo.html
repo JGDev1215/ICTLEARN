@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="data:,">
 <meta name="description" content="Interactive NQ killzone chart with prior-session ranges, candidate FVG and wick measurements.">
 <title>NQ · ICT Chart Study</title>
 <style>
@@ -665,6 +666,7 @@ async function initializeNavigation(){
  const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),8000);
  try{
   try{
+   if(location.hostname.endsWith('.github.io'))throw Error('Static host');
    const response=await fetch('/api/ict/meta',{signal:controller.signal,cache:'no-store'});
    if(!response.ok)throw Error('No history service');
    historyMeta=await response.json();dataMode='api';
