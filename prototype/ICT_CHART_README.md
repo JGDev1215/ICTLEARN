@@ -1,9 +1,9 @@
 # ICT chart preview
 
-Run from the Journal project root:
+Run from the `ICTLEARN` repository:
 
 ```sh
-python3 prototype/ict_chart_server.py --port 8768
+npm run serve:local
 ```
 
 Open <http://127.0.0.1:8768/prototype/ict_notes_demo.html>.
@@ -31,12 +31,12 @@ Manual drawings are retained separately by date/session for the current
 page visit. Journal notes use the existing browser storage key; keep the
 same hostname and port to access existing drafts.
 
-The server binds only to 127.0.0.1 and opens the linked NQ database using
-SQLite mode=ro and PRAGMA query_only. It exposes GET-only history endpoints
-and a small allowlist of demo/source files. The market database is never
-copied or modified. Dates outside source coverage return an error; empty
-windows show an empty chart, and incomplete five-minute buckets are omitted
-without compressing the time axis.
+The server binds only to 127.0.0.1, serves the current files in this repository,
+and opens the linked parent Journal NQ database using SQLite mode=ro and PRAGMA
+query_only. It exposes GET-only history endpoints and bounded chart/source
+assets. The market database is never copied or modified. Dates outside source
+coverage return an error; empty windows show an empty chart, and incomplete
+five-minute buckets are omitted without compressing the time axis.
 
 The API labels the fixed Databento history and the mutable Yahoo `NQ=F`
 continuation separately. A source-boundary marker is drawn when it falls
@@ -72,14 +72,15 @@ python3 tools/export_static_sessions.py \
   --end-date 2026-09-04
 ```
 
-The server and its Python tests belong to the parent Journal workspace; they are
-not duplicated in this public static repository. From the Journal root, run:
+The reusable API calculations and their Python tests belong to the parent
+Journal workspace. From the Journal root, run:
 
 ```sh
 python3 -m unittest discover -s prototype -p test_ict_chart_server.py -v
 ```
 
-From the `ICTLEARN` repository, run the renderer checks with `npm test`. With
-the Journal server running on port 8768, add
+From the `ICTLEARN` repository, run the renderer checks with `npm test` and the
+end-to-end database/browser check with `npm run test:local-db`. With another
+compatible Journal server running on port 8768, add
 `ICT_API_BASE=http://127.0.0.1:8768 npm run test:api` to exercise its real
 1-minute and 5-minute responses through the chart-scene adapter.

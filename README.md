@@ -36,19 +36,21 @@ request. Both renderers consume the same replay-limited chart scene.
 
 ## Local full-data mode
 
-From the Journal project root:
+From this repository:
 
 ```sh
-python3 prototype/ict_chart_server.py --port 8768
+npm run serve:local
 ```
 
 Then open:
 
 <http://127.0.0.1:8768/prototype/ict_notes_demo.html>
 
-The local server uses the canonical NQ database as its sole historical-price
-authority, opens it in SQLite read-only mode, and aggregates the optional
-5-minute view from the 1-minute rows.
+The local server serves this repository's current chart assets and uses the
+canonical parent Journal NQ database as its sole historical-price authority. It
+opens SQLite in read-only mode and aggregates the optional 5-minute view from
+the 1-minute rows. This avoids loading an older chart copy from the parent
+workspace.
 
 To rebuild the bounded GitHub Pages snapshots from the canonical read-only
 database, run from this repository:
@@ -78,8 +80,14 @@ npx playwright install chromium
 npm test
 ```
 
-When the Journal read-only chart server is already running, validate its real
-1-minute and 5-minute responses through the same scene adapter:
+Run the full local database and browser integration check:
+
+```sh
+npm run test:local-db
+```
+
+When a compatible Journal read-only chart server is already running, validate
+its real 1-minute and 5-minute responses through the same scene adapter:
 
 ```sh
 ICT_API_BASE=http://127.0.0.1:8768 npm run test:api
