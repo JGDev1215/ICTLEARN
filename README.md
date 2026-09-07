@@ -3,6 +3,12 @@
 Chart-led ICT study guide for comparing NQ sessions and recognising repeated
 price behaviour, timing, and confluence.
 
+This project is the canonical implementation of the
+[Journal Financial Charting Standard](docs/JOURNAL_CHARTING_STANDARD.md). JCS-1
+defines the shared chart architecture, visual language, interaction behavior,
+data provenance, replay safety, accessibility, and validation gates for chart
+projects in the parent Journal workspace.
+
 ## Hosted demo
 
 The GitHub Pages entry point is `index.html`, which opens
